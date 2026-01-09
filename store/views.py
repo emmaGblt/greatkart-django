@@ -17,3 +17,11 @@ def store(request, category_slug=None):
         "product_count": products.count(),
     }
     return render(request, "store/store.html", context)
+
+
+def product_detail(request, category_slug=None, product_slug=None):
+    product = get_object_or_404(Product, slug=product_slug)
+
+    context = {"product": product}
+
+    return render(request, "store/product_detail.html", context)
