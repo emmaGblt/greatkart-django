@@ -20,9 +20,15 @@ def cart(request):
         )["total_price"]
     except Cart.DoesNotExist:
         pass
+
+    tax = 0.2 * total_price  # we apply a 2% tax
+    total_with_tax = total_price + tax
+
     context = {
-        "total_price": total_price,
         "cart_items": cart_items,
+        "total_price": total_price,
+        "tax": tax,
+        "total_with_tax": total_with_tax,
     }
     return render(request, "store/cart.html", context)
 
