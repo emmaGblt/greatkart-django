@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from store.models import Product
 from carts.models import Cart, CartItem
 from django.urls import reverse
-from django.db.models import Sum
 
 
 def cart(request):
@@ -12,12 +11,13 @@ def cart(request):
     try:
         session_key = _get_session_key(request)
         cart = Cart.objects.get(session_key=session_key)
-        cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        cart_items = CartItem.objects.filter(cart=cart, is_active=True).select_related(
+            "product"
+        )
 
         # Calculate total price
-        total_price = cart_items.aggregate(
-            total_price=Sum("product__price", default=0)
-        )["total_price"]
+        for cart_item in cart_items:
+            total_price += cart_item.quantity * cart_item.product.price
     except Cart.DoesNotExist:
         pass
 
@@ -42,7 +42,7 @@ def _get_session_key(request):
 
 
 def add_product_to_cart(request, product_id):
-    product = Product.objects.get(id=product_id)
+    product = get_object_or_404(Product, id=product_id)
     session_key = _get_session_key(request)
 
     # Get the cart or create it
@@ -59,5 +59,33 @@ def add_product_to_cart(request, product_id):
         cart_item.save()
     except CartItem.DoesNotExist:
         cart_item = CartItem.objects.create(cart=cart, product=product, quantity=1)
+
+    return redirect(reverse("cart"))
+
+
+def increment_product_from_cart_item(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+
+    cart_item.quantity += 1
+    cart_item.save()
+
+    return redirect(reverse("cart"))
+
+
+def decrement_product_from_cart_item(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+        cart_item.save()
+    else:
+        cart_item.delete()
+
+    return redirect(reverse("cart"))
+
+
+def delete_cart_item(request, cart_item_id):
+    cart_item = get_object_or_404(CartItem, id=cart_item_id)
+    cart_item.delete()
 
     return redirect(reverse("cart"))
