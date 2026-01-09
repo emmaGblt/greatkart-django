@@ -58,13 +58,17 @@
               class="btn btn-primary dropdown-toggle"
               data-toggle="dropdown"
             >
-              <i class="fa fa-bars"></i> All category
+              <i class="fa fa-bars"></i>
+              All products
             </button>
             <div class="dropdown-menu">
+              <a class="dropdown-item" href="{% url 'store' %}">
+                All products
+              </a>
               {% for category in categories %}
-              <a class="dropdown-item" href="{{ category.get_url }}"
-                >{{ category.name }}</a
-              >
+              <a class="dropdown-item" href="{{ category.get_url }}">
+                {{ category.name }}
+              </a>
               {% endfor %}
             </div>
           </div>
