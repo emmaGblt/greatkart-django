@@ -19,19 +19,20 @@
               </tr>
             </thead>
             <tbody>
+              {% for cart_item in cart_items %}
               <tr>
                 <td>
                   <figure class="itemside align-items-center">
                     <div class="aside">
                       <img
-                        src="{% static './images/items/11.jpg' %}"
+                        src="{{ cart_item.product.image.url }}"
                         class="img-sm"
                       />
                     </div>
                     <figcaption class="info">
-                      <a href="#" class="title text-dark"
-                        >Camera Canon EOS M50 Kit</a
-                      >
+                      <a href="#" class="title text-dark">
+                        {{cart_item.product.name}}
+                      </a>
                       <p class="text-muted small">
                         Matrix: 25 Mpx <br />
                         Brand: Canon
@@ -52,15 +53,20 @@
                           <i class="fa fa-minus"></i>
                         </button>
                       </div>
-                      <input type="text" class="form-control" value="1" />
+                      <input
+                        type="text"
+                        class="form-control"
+                        value="{{ cart_item.quantity }}"
+                      />
                       <div class="input-group-append">
-                        <button
+                        <a
+                          href="{% url 'add_product_to_cart' cart_item.product.id %}"
                           class="btn btn-light"
                           type="button"
                           id="button-minus"
                         >
                           <i class="fa fa-plus"></i>
-                        </button>
+                        </a>
                       </div>
                     </div>
                     <!-- input-group.// -->
@@ -69,8 +75,10 @@
                 </td>
                 <td>
                   <div class="price-wrap">
-                    <var class="price">$1156.00</var>
-                    <small class="text-muted"> $315.20 each </small>
+                    <var class="price">${{ cart_item.total_price }}</var>
+                    <small class="text-muted">
+                      ${{ cart_item.product.price }} each
+                    </small>
                   </div>
                   <!-- price-wrap .// -->
                 </td>
@@ -78,6 +86,7 @@
                   <a href="" class="btn btn-danger"> Remove</a>
                 </td>
               </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -89,7 +98,7 @@
           <div class="card-body">
             <dl class="dlist-align">
               <dt>Total price:</dt>
-              <dd class="text-right">$69.97</dd>
+              <dd class="text-right">${{ total_price }}</dd>
             </dl>
             <dl class="dlist-align">
               <dt>Tax:</dt>
