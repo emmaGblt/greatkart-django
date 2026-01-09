@@ -7,7 +7,7 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.id
+        return f"{self.id}"
 
 
 class CartItem(models.Model):
@@ -17,4 +17,4 @@ class CartItem(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"${self.product.name} (cart: ${self.cart.id})"
+        return f"{self.product.name} (cart: {self.cart.id})"
