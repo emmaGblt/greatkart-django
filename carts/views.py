@@ -21,7 +21,7 @@ def cart(request):
     except Cart.DoesNotExist:
         pass
 
-    tax = 0.2 * total_price  # we apply a 2% tax
+    tax = round(0.2 * total_price, 2)  # we apply a 2% tax
     total_with_tax = total_price + tax
 
     context = {
