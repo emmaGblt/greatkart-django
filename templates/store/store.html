@@ -150,7 +150,7 @@
         <!-- sect-heading -->
 
         <div class="row">
-          {% for product in products %}
+          {% for product in paginated_products %}
           <div class="col-md-4">
             <figure class="card card-product-grid">
               <a href="{{ product.get_url }}" class="img-wrap">
@@ -180,19 +180,58 @@
         </div>
         <!-- row end.// -->
 
+        {% if paginated_products.has_other_pages %}
         <nav class="mt-4" aria-label="Page navigation sample">
           <ul class="pagination">
+            {% if paginated_products.has_previous %}
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{ paginated_products.previous_page_number }}"
+              >
+                Previous
+              </a>
+            </li>
+            {% else %}
             <li class="page-item disabled">
               <a class="page-link" href="#">Previous</a>
             </li>
+            {% endif %}
+            <!-- prettier-ignore -->
+            {% for page_number in paginated_products.paginator.page_range %}
+            {% if paginated_products.number == page_number %}
             <li class="page-item active">
-              <a class="page-link" href="#">1</a>
+              <a class="page-link" href="?page={{ page_number }}"
+                >{{ page_number }}</a
+              >
             </li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            {% else %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ page_number }}"
+                >{{ page_number }}</a
+              >
+            </li>
+            {% endif %}
+            <!-- prettier-ignore -->
+            {% endfor %}
+            <!-- prettier-ignore -->
+            {% if paginated_products.has_next %}
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{ paginated_products.next_page_number }}"
+              >
+                Next
+              </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+              <a class="page-link" href="#">Next</a>
+            </li>
+            {% endif %}
           </ul>
         </nav>
+        {% endif %}
       </main>
       <!-- col.// -->
     </div>
