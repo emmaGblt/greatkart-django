@@ -37,7 +37,10 @@
                       />
                     </div>
                     <figcaption class="info">
-                      <a href="#" class="title text-dark">
+                      <a
+                        href="{{ cart_item.product.get_url }}"
+                        class="title text-dark"
+                      >
                         {{cart_item.product.name}}
                       </a>
                       <p class="text-muted small">
