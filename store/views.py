@@ -3,7 +3,8 @@ from .models import Product
 from category.models import Category
 from carts.views import _get_session_key
 from carts.models import CartItem
-from django.core.paginator import Paginator
+from django.db.models import Q
+from .utils import paginate_products
 
 
 def store(request, category_slug=None):
@@ -15,13 +16,12 @@ def store(request, category_slug=None):
     else:
         products = Product.objects.filter(is_available=True)
 
-    paginator = Paginator(products, 3)
     page_number = request.GET.get("page")
-    paginated_products = paginator.get_page(page_number)
+    paginated_products = paginate_products(products, page_number)
 
     context = {
         "paginated_products": paginated_products,
-        "product_count": paginated_products.count,
+        "product_count": paginated_products.paginator.count,
     }
     return render(request, "store/store.html", context)
 
@@ -36,3 +36,23 @@ def product_detail(request, category_slug=None, product_slug=None):
     context = {"product": product, "is_already_in_cart": is_already_in_cart}
 
     return render(request, "store/product_detail.html", context)
+
+
+def search(request):
+    search_value = request.GET.get("search", None)
+
+    if search_value:
+        products = Product.objects.filter(
+            Q(description__icontains=search_value) | Q(name__icontains=search_value)
+        )
+    else:
+        products = Product.objects.all()
+
+    page_number = request.GET.get("page")
+    paginated_products = paginate_products(products, page_number)
+
+    context = {
+        "paginated_products": paginated_products,
+        "product_count": paginated_products.paginator.count,
+    }
+    return render(request, "store/store.html", context)
