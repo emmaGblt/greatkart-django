@@ -44,8 +44,12 @@
                         {{cart_item.product.name}}
                       </a>
                       <p class="text-muted small">
-                        Matrix: 25 Mpx <br />
-                        Brand: Canon
+                        {% for variation in cart_item.variations.all %}
+                        <!-- prettier-ignore -->
+                        {{ variation.category | capfirst }}: {{ variation.value | capfirst }}
+                        <br />
+                        <!-- prettier-ignore -->
+                        {% endfor %}
                       </p>
                     </figcaption>
                   </figure>

@@ -47,7 +47,7 @@ def add_product_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     session_key = _get_session_key(request)
 
-    variations = []
+    request_variations = []
 
     if request.method == "POST":
         for key, value in request.POST.items():
@@ -56,11 +56,9 @@ def add_product_to_cart(request, product_id):
                 variation = Variation.objects.get(
                     product=product, category=key, value=value
                 )
-                variations.append(variation)
+                request_variations.append(variation)
             except Variation.DoesNotExist:
                 pass
-
-        return HttpResponse(request.POST)
 
     # Get the cart or create it
     try:
@@ -68,14 +66,31 @@ def add_product_to_cart(request, product_id):
     except Cart.DoesNotExist:
         cart = Cart.objects.create(session_key=session_key)
 
-    # Get or create a CartItem for this product
+    # Get or create a new CartItem for this product
+    request_variations_ids = [var.id for var in request_variations]
+    cart_item_with_same_variations = None
 
-    try:
-        cart_item = CartItem.objects.get(cart=cart, product=product)
+    # Find all the CartItem instances for this product and this cart
+    cart_items = CartItem.objects.filter(cart=cart, product=product)
+
+    # Loop through the cart items to find one with the same variations as those passed in the request
+    for ci in cart_items:
+        ci_variation_ids = ci.variations.values_list("id", flat=True)
+        if sorted(ci_variation_ids) == sorted(request_variations_ids):
+            # A cart item with the same variations has been found
+            cart_item_with_same_variations = ci
+            break
+
+    # If a cart item with the same variations has been found, increase its quantity by one
+    if cart_item_with_same_variations:
+        cart_item = cart_item_with_same_variations
         cart_item.quantity += 1
         cart_item.save()
-    except CartItem.DoesNotExist:
+    else:
+        # Else, create a new cart item with the request variations
         cart_item = CartItem.objects.create(cart=cart, product=product, quantity=1)
+        cart_item.variations.set(request_variations)
+        cart_item.save()
 
     return redirect(reverse("cart"))
 
