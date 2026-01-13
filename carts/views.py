@@ -3,8 +3,6 @@ from store.models import Product
 from carts.models import Cart, CartItem
 from django.urls import reverse
 
-from django.http import HttpResponse
-
 
 def cart(request):
     total_price = 0
@@ -44,11 +42,6 @@ def _get_session_key(request):
 
 
 def add_product_to_cart(request, product_id):
-    color = request.GET.get("color")
-    size = request.GET.get("size")
-
-    return HttpResponse(color + " " + size)
-
     product = get_object_or_404(Product, id=product_id)
     session_key = _get_session_key(request)
 

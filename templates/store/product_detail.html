@@ -34,10 +34,13 @@
               <div class="row">
                 <div class="item-option-select">
                   <h6>Choose Color</h6>
-                  <select name="color" class="form-control">
-                    <option value="red">Red</option>
-                    <option value="green">Green</option>
-                    <option value="blue">Blue</option>
+                  <select name="color" class="form-control" required>
+                    <option value="" disabled selected>---</option>
+                    {% for color in product.variations.colors %}
+                    <option value="{{ color.value }}">
+                      {{ color.value | capfirst }}
+                    </option>
+                    {% endfor %}
                   </select>
                 </div>
               </div>
@@ -45,10 +48,13 @@
               <div class="row">
                 <div class="item-option-select">
                   <h6>Select Size</h6>
-                  <select name="size" class="form-control">
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>
+                  <select name="size" class="form-control" required>
+                    <option value="" disabled selected>---</option>
+                    {% for size in product.variations.sizes %}
+                    <option value="{{ size.value }}">
+                      {{ size.value | capfirst }}
+                    </option>
+                    {% endfor %}
                   </select>
                 </div>
               </div>

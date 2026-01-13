@@ -25,6 +25,14 @@ class Product(models.Model):
         ordering = ["-created_at"]
 
 
+class VariationManager(models.Manager):
+    def colors(self):
+        return self.filter(category=Variation.COLOR, is_active=True)
+
+    def sizes(self):
+        return self.filter(category=Variation.SIZE, is_active=True)
+
+
 class Variation(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="variations"
@@ -40,5 +48,7 @@ class Variation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = VariationManager()
+
     def __str__(self):
-        return str(self.product)
+        return f"{self.product} ({self.category}: {self.value})"
