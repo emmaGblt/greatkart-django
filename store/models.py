@@ -23,3 +23,20 @@ class Product(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+
+
+class Variation(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    COLOR = "color"
+    SIZE = "size"
+    CATEGORY_CHOICES = {COLOR: "color", SIZE: "size"}
+    category = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
+
+    value = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.product)
