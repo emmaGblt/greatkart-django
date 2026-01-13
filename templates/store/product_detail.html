@@ -37,7 +37,7 @@
                   <select name="color" class="form-control" required>
                     <option value="" disabled selected>---</option>
                     {% for color in product.variations.colors %}
-                    <option value="{{ color.value }}">
+                    <option value="{{ color.value | lower }}">
                       {{ color.value | capfirst }}
                     </option>
                     {% endfor %}
@@ -51,7 +51,7 @@
                   <select name="size" class="form-control" required>
                     <option value="" disabled selected>---</option>
                     {% for size in product.variations.sizes %}
-                    <option value="{{ size.value }}">
+                    <option value="{{ size.value | lower }}">
                       {{ size.value | capfirst }}
                     </option>
                     {% endfor %}
