@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from store.models import Product
+from store.models import Product, Variation
 from carts.models import Cart, CartItem
 from django.urls import reverse
+
+from django.http import HttpResponse
 
 
 def cart(request):
@@ -44,6 +46,21 @@ def _get_session_key(request):
 def add_product_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     session_key = _get_session_key(request)
+
+    variations = []
+
+    if request.method == "POST":
+        for key, value in request.POST.items():
+            try:
+                # Check if a variation exists for this key-value pair
+                variation = Variation.objects.get(
+                    product=product, category=key, value=value
+                )
+                variations.append(variation)
+            except Variation.DoesNotExist:
+                pass
+
+        return HttpResponse(request.POST)
 
     # Get the cart or create it
     try:
