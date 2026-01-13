@@ -3,8 +3,6 @@ from store.models import Product, Variation
 from carts.models import Cart, CartItem
 from django.urls import reverse
 
-from django.http import HttpResponse
-
 
 def cart(request):
     total_price = 0
