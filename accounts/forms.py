@@ -1,5 +1,6 @@
 from django import forms
 from .models import Account
+import re
 
 
 class RegistrationForm(forms.ModelForm):
@@ -29,3 +30,19 @@ class RegistrationForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data["phone_number"]
+        pattern = r"^[0-9]{10}$"
+        if not re.match(pattern, phone_number):
+            raise forms.ValidationError("Your phone number has an invalid format!")
+        return phone_number
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data["password"]
+        confirm_password = cleaned_data["confirm_password"]
+
+        if password != confirm_password:
+            raise forms.ValidationError("Confirmation password does not match.")
+        return cleaned_data

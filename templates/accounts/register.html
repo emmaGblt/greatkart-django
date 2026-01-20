@@ -53,6 +53,12 @@
           </button>
         </div>
         <!-- form-group// -->
+        <!-- Email errors -->
+        {{ form.email.errors }}
+        <!-- Phone number errors -->
+        {{ form.phone_number.errors }}
+        <!-- Non-field errors -->
+        {{ form.non_field_errors }}
       </form>
     </article>
     <!-- card-body.// -->
