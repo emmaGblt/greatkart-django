@@ -3,16 +3,12 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class AccountManager(BaseUserManager):
-    def create_user(self, first_name, last_name, username, email, password=None):
+    def create_user(self, first_name, last_name, email, password=None):
         if not email:
             raise ValueError("User must have an email address")
 
-        if not username:
-            raise ValueError("User must have a username")
-
         user = self.model(
             email=self.normalize_email(email),
-            username=username,
             first_name=first_name,
             last_name=last_name,
         )
@@ -21,10 +17,8 @@ class AccountManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, first_name, last_name, username, email, password=None):
-        user = self.create_user(
-            first_name, last_name, username, email, password=password
-        )
+    def create_superuser(self, first_name, last_name, email, password=None):
+        user = self.create_user(first_name, last_name, email, password=password)
         user.is_admin = True
         user.is_superadmin = True
         user.save(using=self._db)
@@ -35,7 +29,6 @@ class AccountManager(BaseUserManager):
 class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
     phone_number = models.CharField(max_length=50)
 
@@ -47,7 +40,6 @@ class Account(AbstractBaseUser):
 
     USERNAME_FIELD = "email"  # the unique field used to log in (default: username)
     REQUIRED_FIELDS = [
-        "username",
         "first_name",
         "last_name",
     ]  # fields to provide when using createsuperuser command (must not contain the USERNAME_FIELD)
