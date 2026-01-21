@@ -46,7 +46,9 @@ def register(request):
                 mail_subject, mail_message, None, recipient_list=[recipient_email]
             )
 
-            messages.success(request, "Registration successful!")
+            messages.success(
+                request, "Registration successful! You need to validate your email now."
+            )
             return redirect(reverse("register"))
     else:
         form = RegistrationForm()
