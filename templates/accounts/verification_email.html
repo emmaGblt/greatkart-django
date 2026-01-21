@@ -1,0 +1,14 @@
+{% autoescape off %}
+
+<!-- Line break -->
+
+Hi {{ user.first_name }} !
+
+<!-- content -->
+
+Please on the link below to activate your account.
+<!-- Line break -->
+http://{{domain}}/{% url 'activate_account' uidb64=uid token=token %}
+
+<!-- Line break -->
+{%endautoescape %}
