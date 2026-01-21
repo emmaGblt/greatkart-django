@@ -20,7 +20,7 @@ class AccountManager(BaseUserManager):
     def create_superuser(self, first_name, last_name, email, password=None):
         user = self.create_user(first_name, last_name, email, password=password)
         user.is_admin = True
-        user.is_superadmin = True
+        user.is_superuser = True
         user.is_active = True
         user.save(using=self._db)
 
@@ -39,7 +39,7 @@ class Account(AbstractBaseUser):
     is_active = models.BooleanField(
         default=False
     )  # To be active, the user needs to validate its email
-    is_superadmin = models.BooleanField(default=False)  # FIXME: keep it?
+    is_superuser = models.BooleanField(default=False)  # FIXME: keep it?
 
     USERNAME_FIELD = "email"  # the unique field used to log in (default: username)
     REQUIRED_FIELDS = [
