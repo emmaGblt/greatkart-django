@@ -68,13 +68,24 @@ class AccountAdmin(BaseUserAdmin):
     search_fields = ["email", "first_name", "last_name"]
     ordering = ["-date_joined"]
 
-    readonly_fields = ["last_login", "date_joined"]
+    readonly_fields = ["last_login", "date_joined", "is_superuser"]
 
     filter_horizontal = []
     fieldsets = [
         (None, {"fields": ["email", "password"]}),
-        ("Personal info", {"fields": ["first_name", "last_name", "is_active"]}),
-        ("Permissions", {"fields": ["is_admin"]}),
+        (
+            "Personal info",
+            {
+                "fields": [
+                    "first_name",
+                    "last_name",
+                    "is_active",
+                    "date_joined",
+                    "last_login",
+                ]
+            },
+        ),
+        ("Permissions", {"fields": ["is_admin", "is_superuser"]}),
     ]
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
