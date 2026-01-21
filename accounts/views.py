@@ -9,8 +9,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.utils.http import urlsafe_base64_encode
-from django.http import HttpResponse
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 
 def register(request):
@@ -29,8 +28,9 @@ def register(request):
             user.phone_number = phone_number
             user.save()
 
-            # SEND A LINK TO ACTIVATE THE USER (= EMAIL ADDRESS VALIDATION)
+            # SEND A LINK TO ACTIVATE THE USER (= EMAIL ADDurlsafe_base64_decodeRESS VALIDATION)
             current_site = get_current_site(request)
+            token = default_token_generator.make_token(user)
             mail_subject = "Account activation"
             mail_message = render_to_string(
                 "accounts/verification_email.html",
@@ -38,7 +38,7 @@ def register(request):
                     "user": user,
                     "domain": current_site,
                     "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "token": default_token_generator.make_token(user),
+                    "token": token,
                 },
             )
             recipient_email = email
@@ -78,5 +78,18 @@ def logout(request):
     return redirect(reverse("login"))
 
 
-def activate_account(request):
-    return HttpResponse("Yes!")
+def activate_account(request, uidb64, token):
+    try:
+        pk = urlsafe_base64_decode(uidb64).decode()
+        user = Account.objects.get(pk=pk)
+    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, "Your account is now activated!")
+        return redirect(reverse("login"))
+    else:
+        messages.error(request, "Account activation failed...")
+        return redirect(reverse("register"))
