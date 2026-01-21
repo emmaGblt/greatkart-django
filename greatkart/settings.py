@@ -12,10 +12,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from django.contrib.messages import constants as messages
 from pathlib import Path
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -144,6 +140,11 @@ MESSAGE_TAGS = {
 }
 
 # Email configuration
+# from dotenv import load_dotenv
+# import os
+
+# load_dotenv()
+
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend" # Too much security on my Gmail address
 # EMAIL_HOST = "smtp.gmail.com"
 # EMAIL_PORT = 587
