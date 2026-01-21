@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from django.contrib.messages import constants as messages
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -120,7 +124,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static files (CSS, JavaScript, Images) configuration
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
@@ -129,11 +133,19 @@ STATICFILES_DIRS = [
     "greatkart/static",
 ]
 
-# Media files
+# Media files configuration
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 
+# Messages configuration
 MESSAGE_TAGS = {
     messages.ERROR: "danger",
 }
+
+# Email configuration
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = True
