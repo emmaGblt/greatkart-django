@@ -10,6 +10,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode
+from django.http import HttpResponse
 
 
 def register(request):
@@ -41,7 +42,9 @@ def register(request):
                 },
             )
             recipient_email = email
-            send_mail(mail_subject, mail_message, recipient_list=[recipient_email])
+            send_mail(
+                mail_subject, mail_message, None, recipient_list=[recipient_email]
+            )
 
             messages.success(request, "Registration successful!")
             return redirect(reverse("register"))
@@ -73,3 +76,7 @@ def logout(request):
     auth.logout(request)
     messages.success(request, "You have been logged out!")
     return redirect(reverse("login"))
+
+
+def activate_account(request):
+    return HttpResponse("Yes!")
