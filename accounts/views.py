@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import RegistrationForm
 from .models import Account
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.urls import reverse
 
 
@@ -20,7 +20,7 @@ def register(request):
             user.phone_number = phone_number
             user.save()
 
-            messages.success(request, "Registration successful")
+            messages.success(request, "Registration successful!")
             return redirect(reverse("register"))
     else:
         form = RegistrationForm()
@@ -29,6 +29,19 @@ def register(request):
 
 
 def login(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        user = auth.authenticate(email=email, password=password)
+        if user is not None:
+            auth.login(request, user)
+            # messages.success(request, "Login successful!")
+            return redirect(reverse("home"))
+        else:
+            messages.error(request, "Invalid login credentials.")
+            return redirect(reverse("login"))
+
     return render(request, "accounts/login.html")
 
 
