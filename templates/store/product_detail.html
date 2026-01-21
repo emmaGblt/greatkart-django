@@ -32,6 +32,7 @@
               <p>{{ product.description }}</p>
 
               <hr />
+              {% if product.variations.colors %}
               <div class="row">
                 <div class="item-option-select">
                   <h6>Choose Color</h6>
@@ -45,7 +46,9 @@
                   </select>
                 </div>
               </div>
+              {% endif %}
               <!-- row.// -->
+              {% if product.variations.sizes %}
               <div class="row">
                 <div class="item-option-select">
                   <h6>Select Size</h6>
@@ -59,8 +62,10 @@
                   </select>
                 </div>
               </div>
-              <!-- row.// -->
               <hr />
+              {% endif %}
+              <!-- row.// -->
+
               {% if product.stock <= 0 %}
               <h5 class="text-danger">Out of stock</h5>
               {% else %}
