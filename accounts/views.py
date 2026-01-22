@@ -60,11 +60,16 @@ def login(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
 
+        # Handle redirection after login when a view has the login_required decorator (for instance)
+        next = request.POST.get("next")
+
         user = auth.authenticate(email=email, password=password)
         if user is not None:
             auth.login(request, user)
-            # messages.success(request, "Login successful!")
-            return redirect(reverse("home"))
+            if next:
+                return redirect(next)
+            else:
+                return redirect(reverse("home"))
         else:
             messages.error(request, "Invalid login credentials.")
             return redirect(reverse("login"))
@@ -72,7 +77,7 @@ def login(request):
     return render(request, "accounts/login.html")
 
 
-@login_required(login_url="login")
+@login_required
 def logout(request):
     auth.logout(request)
     messages.success(request, "You have been logged out!")
@@ -100,3 +105,11 @@ def activate_account(request, uidb64, token):
     else:
         messages.error(request, "Account activation failed...")
         return redirect(reverse("register"))
+
+
+from django.http import HttpResponse
+
+
+@login_required
+def dashboard(request):
+    return HttpResponse("Hello!")
