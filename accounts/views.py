@@ -66,7 +66,8 @@ def login(request):
         user = auth.authenticate(email=email, password=password)
         if user is not None:
             auth.login(request, user)
-            return redirect(next or reverse("home"))
+            messages.success(request, "You are now logged in.")
+            return redirect(next or reverse("dashboard"))
         else:
             messages.error(request, "Invalid login credentials.")
             return redirect(reverse("login"))
