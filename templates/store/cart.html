@@ -60,7 +60,7 @@
                     <div class="input-group input-spinner">
                       <div class="input-group-prepend">
                         <a
-                          href="{% url 'decrement_product_from_cart_item' cart_item.id %}"
+                          href="{% url 'decrement-product-from-cart-item' cart_item.id %}"
                           class="btn btn-light"
                           type="button"
                           id="button-plus"
@@ -75,7 +75,7 @@
                       />
                       <div class="input-group-append">
                         <a
-                          href="{% url 'increment_product_from_cart_item' cart_item.id %}"
+                          href="{% url 'increment-product-from-cart-item' cart_item.id %}"
                           class="btn btn-light"
                           type="button"
                           id="button-minus"
@@ -99,9 +99,13 @@
                 </td>
                 <td class="text-right">
                   <a
-                    href="{% url 'delete_cart_item' cart_item.id %}"
+                    href="{% url 'delete-cart-item' cart_item.id %}"
                     class="btn btn-danger"
-                    onclick="return confirm('Are you sure you want to delete this item?')"
+                    onclick="
+                      return confirm(
+                        'Are you sure you want to delete this item?',
+                      );
+                    "
                   >
                     Remove</a
                   >

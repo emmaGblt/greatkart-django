@@ -5,23 +5,23 @@ from . import views
 urlpatterns = [
     path("", views.cart, name="cart"),
     path(
-        "add_product_to_cart/<int:product_id>/",
+        "add-product-to-cart/<int:product_id>/",
         views.add_product_to_cart,
-        name="add_product_to_cart",
+        name="add-product-to-cart",
     ),
     path(
-        "decrement_product_from_cart_item/<int:cart_item_id>",
+        "decrement-product-from-cart-item/<int:cart_item_id>",
         views.decrement_product_from_cart_item,
-        name="decrement_product_from_cart_item",
+        name="decrement-product-from-cart-item",
     ),
     path(
-        "increment_product_from_cart_item/<int:cart_item_id>",
+        "increment-product-from-cart-item/<int:cart_item_id>",
         views.increment_product_from_cart_item,
-        name="increment_product_from_cart_item",
+        name="increment-product-from-cart-item",
     ),
     path(
-        "delete_cart_item/<int:cart_item_id>",
+        "delete-cart-item/<int:cart_item_id>",
         views.delete_cart_item,
-        name="delete_cart_item",
+        name="delete-cart-item",
     ),
 ]
