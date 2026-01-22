@@ -10,7 +10,10 @@ urlpatterns = [
     path("login/", views.login, name="login"),
     path("logout/", views.logout, name="logout"),
     path("register/", views.register, name="register"),
+    path("reset-password/", views.reset_password, name="reset-password"),
     path(
-        "reset-password/<uidb64>/<token>/", views.reset_password, name="reset-password"
+        "reset-password-validate/<uidb64>/<token>/",
+        views.reset_password_validate,
+        name="reset-password-validate",
     ),
 ]

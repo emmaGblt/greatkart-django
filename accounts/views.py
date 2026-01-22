@@ -84,8 +84,8 @@ def logout(request):
 
 def activate_account(request, uidb64, token):
     try:
-        pk = urlsafe_base64_decode(uidb64).decode()
-        user = Account.objects.get(pk=pk)
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Account.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
         user = None
 
@@ -152,5 +152,41 @@ def forgot_password(request):
     return render(request, "accounts/forgot_password.html")
 
 
-def reset_password(request, uidb64, token):
+def reset_password_validate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Account.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        # FIXME: Check if the account has already been activated or not?
+        # Store the ui in the session
+        request.session["uid"] = uid
+        return redirect(reverse("reset-password"))
+    else:
+        messages.error(request, "Password reset failed...")
+        return redirect(reverse("login"))
+
+
+def reset_password(request):
+    if request.method == "POST":
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if password == confirm_password:
+            try:
+                uid = request.session.get("uid")
+                user = Account.objects.get(id=uid)
+
+                user.set_password(password)
+                user.save()
+                messages.success(request, "Your password has been successfully reset!")
+            except Account.DoesNotExist:
+                messages.error(request, "Ooops! Something went wrong...")
+
+            return redirect(reverse("login"))
+        else:
+            messages.error(request, "Passwords do not match!")
+            return redirect(reverse("reset-password"))
     return render(request, "accounts/reset_password.html")
