@@ -28,7 +28,7 @@ def register(request):
             user.phone_number = phone_number
             user.save()
 
-            # SEND A LINK TO ACTIVATE THE USER (= EMAIL ADDurlsafe_base64_decodeRESS VALIDATION)
+            # SEND A LINK TO ACTIVATE THE USER (= EMAIL ADDRESS VALIDATION)
             current_site = get_current_site(request)
             token = default_token_generator.make_token(user)
             mail_subject = "Account activation"
@@ -115,4 +115,42 @@ def index(request):
 
 
 def forgot_password(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+
+        try:
+            user = Account.objects.get(email=email)
+        except Account.DoesNotExist:
+            user = None
+
+        if user:
+            # SEND A LINK TO RESET THE PASSWORD
+            current_site = get_current_site(request)
+            token = default_token_generator.make_token(user)
+            mail_subject = "Password reset"
+            mail_message = render_to_string(
+                "accounts/reset_password_email.html",
+                {
+                    "user": user,
+                    "domain": current_site,
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "token": token,
+                },
+            )
+            recipient_email = email
+            send_mail(
+                mail_subject, mail_message, None, recipient_list=[recipient_email]
+            )
+            messages.success(
+                request, "A reset password link has been sent to your email address."
+            )
+            redirect(reverse("login"))
+        else:
+            messages.error(request, "Account with this email does not exist.")
+            return redirect(reverse("forgot-password"))
+
     return render(request, "accounts/forgot_password.html")
+
+
+def reset_password(request, uidb64, token):
+    return render(request, "accounts/reset_password.html")
