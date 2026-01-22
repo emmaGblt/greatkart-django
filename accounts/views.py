@@ -66,10 +66,7 @@ def login(request):
         user = auth.authenticate(email=email, password=password)
         if user is not None:
             auth.login(request, user)
-            if next:
-                return redirect(next)
-            else:
-                return redirect(reverse("home"))
+            return redirect(next or reverse("home"))
         else:
             messages.error(request, "Invalid login credentials.")
             return redirect(reverse("login"))
@@ -107,9 +104,6 @@ def activate_account(request, uidb64, token):
         return redirect(reverse("register"))
 
 
-from django.http import HttpResponse
-
-
 @login_required
 def dashboard(request):
-    return HttpResponse("Hello!")
+    return render(request, "accounts/dashboard.html")
