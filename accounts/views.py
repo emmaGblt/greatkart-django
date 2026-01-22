@@ -46,10 +46,9 @@ def register(request):
                 mail_subject, mail_message, None, recipient_list=[recipient_email]
             )
 
-            messages.success(
-                request, "Registration successful! You need to validate your email now."
+            return redirect(
+                reverse("login", query={"status": "verification", "email": email})
             )
-            return redirect(reverse("register"))
     else:
         form = RegistrationForm()
     context = {"form": form}
@@ -88,10 +87,16 @@ def activate_account(request, uidb64, token):
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
-        user.is_active = True
-        user.save()
-        messages.success(request, "Your account is now activated!")
-        return redirect(reverse("login"))
+        if user.is_active:
+            messages.error(
+                request, "Your account has already been activated! Please login."
+            )
+            return redirect(reverse("login"))
+        else:
+            user.is_active = True
+            user.save()
+            messages.success(request, "Your account is now activated!")
+            return redirect(reverse("login"))
     else:
         messages.error(request, "Account activation failed...")
         return redirect(reverse("register"))
