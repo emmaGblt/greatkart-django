@@ -112,3 +112,7 @@ def dashboard(request):
 
 def index(request):
     return redirect(reverse("dashboard"))
+
+
+def forgot_password(request):
+    return render(request, "accounts/forgot_password.html")
