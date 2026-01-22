@@ -19,7 +19,7 @@ class Product(models.Model):
         return self.name
 
     def get_url(self):
-        return reverse("product_detail", args=[self.category.slug, self.slug])
+        return reverse("product-detail", args=[self.category.slug, self.slug])
 
     class Meta:
         ordering = ["-created_at"]
