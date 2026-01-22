@@ -108,3 +108,7 @@ def activate_account(request, uidb64, token):
 @login_required
 def dashboard(request):
     return render(request, "accounts/dashboard.html")
+
+
+def index(request):
+    return redirect(reverse("dashboard"))
