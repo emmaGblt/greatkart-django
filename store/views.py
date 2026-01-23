@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Product
 from category.models import Category
-from carts.views import _get_session_key
+from carts.utils import _get_session_key
 from carts.models import CartItem
 from django.db.models import Q
 from .utils import paginate_products

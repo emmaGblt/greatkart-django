@@ -1,5 +1,5 @@
 from .models import CartItem
-from .views import _get_session_key
+from .utils import _get_session_key
 from django.db.models import Sum
 
 

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from store.models import Product, Variation
 from carts.models import Cart, CartItem
 from django.urls import reverse
-from .utils import get_cart_amounts
+from .utils import get_cart_amounts, _get_session_key
 from django.contrib.auth.decorators import login_required
 
 
@@ -27,14 +27,6 @@ def cart(request):
         "total_with_tax": cart_amounts["total_with_tax"],
     }
     return render(request, "store/cart.html", context)
-
-
-def _get_session_key(request):
-    session = request.session
-
-    if not session.session_key:
-        session.create()
-    return session.session_key
 
 
 def add_product_to_cart(request, product_id):

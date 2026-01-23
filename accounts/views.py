@@ -10,6 +10,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from carts.utils import transfer_cart_items_to_user
 
 
 def register(request):
@@ -65,6 +66,9 @@ def login(request):
 
         user = auth.authenticate(email=email, password=password)
         if user is not None:
+            # Transfer the cart items from the anonymous session cart to the user cart
+            transfer_cart_items_to_user(request, user)
+
             auth.login(request, user)
             messages.success(request, "You are now logged in.")
             return redirect(next or reverse("dashboard"))
