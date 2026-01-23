@@ -119,3 +119,7 @@ def delete_cart_item(request, cart_item_id):
     cart_item.delete()
 
     return redirect(reverse("cart"))
+
+
+def checkout(request):
+    return render(request, "store/checkout.html")
