@@ -4,6 +4,9 @@ from accounts.models import Account
 
 
 class Cart(models.Model):
+    user = models.OneToOneField(
+        Account, on_delete=models.CASCADE, null=True, default=None
+    )
     session_key = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
