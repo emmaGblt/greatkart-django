@@ -1,6 +1,6 @@
 import factory
 from store.models import Product, Variation
-from category.factories import CategoryFactory
+from category.models import Category
 import re
 from factory.fuzzy import FuzzyChoice
 
@@ -18,7 +18,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
     image = factory.Faker("file_path", category="image")
     stock = factory.Faker("pyint", min_value=1)
     is_available = True
-    category = factory.SubFactory(CategoryFactory)
+    category = factory.Iterator(Category.objects.all())
 
 
 class VariationFactory(factory.django.DjangoModelFactory):
