@@ -4,7 +4,7 @@ from .models import Cart, CartItem
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
-    list_display = ["session_key", "created_at"]
+    list_display = ["session_key", "user", "created_at"]
 
 
 @admin.register(CartItem)
