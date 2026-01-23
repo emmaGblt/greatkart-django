@@ -11,7 +11,8 @@ dependencies = [
     "django (>=6.0.1,<7.0.0)",
     "pillow (>=12.1.0,<13.0.0)",
     "python-dotenv (>=1.2.1,<2.0.0)",
-    "pytest-django (>=4.11.1,<5.0.0)"
+    "pytest-django (>=4.11.1,<5.0.0)",
+    "factory-boy (>=3.3.3,<4.0.0)"
 ]
 
 [tool.poetry]
