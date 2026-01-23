@@ -3,6 +3,7 @@ from store.models import Product, Variation
 from carts.models import Cart, CartItem
 from django.urls import reverse
 from .utils import get_cart_amounts
+from django.contrib.auth.decorators import login_required
 
 
 def cart(request):
@@ -116,6 +117,7 @@ def delete_cart_item(request, cart_item_id):
     return redirect(reverse("cart"))
 
 
+@login_required
 def checkout(request):
     cart_items = None
 
