@@ -1,7 +1,8 @@
 import factory
-from store.models import Product
+from store.models import Product, Variation
 from category.factories import CategoryFactory
 import re
+from factory.fuzzy import FuzzyChoice
 
 
 class ProductFactory(factory.django.DjangoModelFactory):
@@ -18,3 +19,15 @@ class ProductFactory(factory.django.DjangoModelFactory):
     stock = factory.Faker("pyint", min_value=1)
     is_available = True
     category = factory.SubFactory(CategoryFactory)
+
+
+class VariationFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Variation
+
+    product = factory.SubFactory(ProductFactory)
+    category = FuzzyChoice(
+        choices=Variation.CATEGORY_CHOICES.items(), getter=lambda c: c[0]
+    )
+    value = factory.Faker("word")
+    is_active = True

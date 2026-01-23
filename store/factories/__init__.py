@@ -1,3 +1,3 @@
-from .product import ProductFactory
+from .product import ProductFactory, VariationFactory
 
-__all__ = ("ProductFactory",)
+__all__ = ("ProductFactory", "VariationFactory")
