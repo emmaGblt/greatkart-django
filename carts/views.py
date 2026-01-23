@@ -2,10 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from store.models import Product, Variation
 from carts.models import Cart, CartItem
 from django.urls import reverse
+from .utils import get_cart_amounts
 
 
 def cart(request):
-    total_price = 0
     cart_items = None
 
     try:
@@ -14,21 +14,16 @@ def cart(request):
         cart_items = CartItem.objects.filter(cart=cart, is_active=True).select_related(
             "product"
         )
-
-        # Calculate total price
-        for cart_item in cart_items:
-            total_price += cart_item.quantity * cart_item.product.price
     except Cart.DoesNotExist:
         pass
 
-    tax = round(0.2 * total_price, 2)  # we apply a 2% tax
-    total_with_tax = total_price + tax
+    cart_amounts = get_cart_amounts(cart_items)
 
     context = {
         "cart_items": cart_items,
-        "total_price": total_price,
-        "tax": tax,
-        "total_with_tax": total_with_tax,
+        "total_price": cart_amounts["total_price"],
+        "tax": cart_amounts["tax"],
+        "total_with_tax": cart_amounts["total_with_tax"],
     }
     return render(request, "store/cart.html", context)
 
@@ -122,4 +117,23 @@ def delete_cart_item(request, cart_item_id):
 
 
 def checkout(request):
-    return render(request, "store/checkout.html")
+    cart_items = None
+
+    try:
+        session_key = _get_session_key(request)
+        cart = Cart.objects.get(session_key=session_key)
+        cart_items = CartItem.objects.filter(cart=cart, is_active=True).select_related(
+            "product"
+        )
+    except Cart.DoesNotExist:
+        pass
+
+    cart_amounts = get_cart_amounts(cart_items)
+
+    context = {
+        "cart_items": cart_items,
+        "total_price": cart_amounts["total_price"],
+        "tax": cart_amounts["tax"],
+        "total_with_tax": cart_amounts["total_with_tax"],
+    }
+    return render(request, "store/checkout.html", context)
