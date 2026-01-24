@@ -33,7 +33,7 @@ def add_product_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     session_key = _get_session_key(request)
 
-    request_variations = []
+    variations = []
 
     if request.method == "POST":
         for key, value in request.POST.items():
@@ -42,7 +42,7 @@ def add_product_to_cart(request, product_id):
                 variation = Variation.objects.get(
                     product=product, category=key, value=value
                 )
-                request_variations.append(variation)
+                variations.append(variation)
             except Variation.DoesNotExist:
                 pass
 
@@ -52,31 +52,7 @@ def add_product_to_cart(request, product_id):
     except Cart.DoesNotExist:
         cart = Cart.objects.create(session_key=session_key)
 
-    # Get or create a new CartItem for this product
-    request_variations_ids = [var.id for var in request_variations]
-    cart_item_with_same_variations = None
-
-    # Find all the CartItem instances for this product and this cart
-    cart_items = CartItem.objects.filter(cart=cart, product=product)
-
-    # Loop through the cart items to find one with the same variations as those passed in the request
-    for ci in cart_items:
-        ci_variation_ids = ci.variations.values_list("id", flat=True)
-        if sorted(ci_variation_ids) == sorted(request_variations_ids):
-            # A cart item with the same variations has been found
-            cart_item_with_same_variations = ci
-            break
-
-    # If a cart item with the same variations has been found, increase its quantity by one
-    if cart_item_with_same_variations:
-        cart_item = cart_item_with_same_variations
-        cart_item.quantity += 1
-        cart_item.save()
-    else:
-        # Else, create a new cart item with the request variations
-        cart_item = CartItem.objects.create(cart=cart, product=product, quantity=1)
-        cart_item.variations.set(request_variations)
-        cart_item.save()
+    cart.add_product(product, variations, quantity=1)
 
     return redirect(reverse("cart"))
 
