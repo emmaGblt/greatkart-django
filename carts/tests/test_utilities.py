@@ -8,30 +8,32 @@ from carts.utils import get_cart_amounts, transfer_cart_to_user
 
 @pytest.mark.django_db
 def test_get_cart_amounts():
-    # Cart with no cart items
-    cart_1 = CartFactory()
+    # Create an empty cart
+    cart = CartFactory()
 
-    amounts = get_cart_amounts(CartItem.objects.filter(cart=cart_1))
+    # Get the empty cart amounts
+    amounts = get_cart_amounts(CartItem.objects.filter(cart=cart))
 
+    # Check that everything is equal to 0
     assert amounts["total_price"] == 0
     assert amounts["tax"] == 0
     assert amounts["total_with_tax"] == 0
 
-    # Cart with cart items
-    cart_2 = CartFactory()
-
-    # Cart item 1
+    # Add cart items to the cart
     product_1 = ProductFactory(price=10.0)
-    CartItemFactory(cart=cart_2, product=product_1, quantity=2)
+    CartItemFactory(cart=cart, product=product_1, quantity=2)
 
-    # Cart item 2
     product_2 = ProductFactory(price=20.0)
-    CartItemFactory(cart=cart_2, product=product_2, quantity=3)
+    CartItemFactory(cart=cart, product=product_2, quantity=3)
 
-    amounts = get_cart_amounts(CartItem.objects.filter(cart=cart_2))
+    # Get the cart amounts
+    amounts = get_cart_amounts(CartItem.objects.filter(cart=cart))
+
+    # The expected results
     expected_total_price = 10.0 * 2 + 20.0 * 3
     expected_tax = round(0.2 * expected_total_price, 2)  # 2% tax
 
+    # Check that the amounts correspond to the expected results
     assert amounts["total_price"] == expected_total_price
     assert amounts["tax"] == expected_tax
     assert amounts["total_with_tax"] == expected_total_price + expected_tax
