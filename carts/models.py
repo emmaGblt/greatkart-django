@@ -15,7 +15,7 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     variations = models.ManyToManyField(Variation, blank=True, related_name="+")
     quantity = models.IntegerField()
