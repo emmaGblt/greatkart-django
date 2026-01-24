@@ -15,6 +15,7 @@ class Cart(models.Model):
         return f"{self.session_key}"
 
     def add_product(self, product, variations=[], quantity=1):
+        """Add a product and its variations to the cart by creating or updating a cart item."""
         filters = Q(product=product)
 
         # Handle product with no variations
