@@ -70,8 +70,11 @@ def login(request):
         if user is not None:
             # Transfer the cart items from the anonymous session cart to the user cart
             session_key = _get_session_key(request)
-            session_cart = Cart.objects.get(session_key=session_key)
-            transfer_cart_to_user(session_cart, user)
+            try:
+                session_cart = Cart.objects.get(session_key=session_key)
+                transfer_cart_to_user(session_cart, user)
+            except Cart.DoesNotExist:
+                pass
 
             auth.login(request, user)
             messages.success(request, "You are now logged in.")
