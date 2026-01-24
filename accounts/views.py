@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+
+from carts.models import Cart
 from .forms import RegistrationForm
 from .models import Account
 from django.contrib import messages, auth
@@ -10,7 +12,7 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from carts.utils import transfer_cart_items_to_user
+from carts.utils import _get_session_key, transfer_cart_to_user
 
 
 def register(request):
@@ -67,7 +69,9 @@ def login(request):
         user = auth.authenticate(email=email, password=password)
         if user is not None:
             # Transfer the cart items from the anonymous session cart to the user cart
-            transfer_cart_items_to_user(request, user)
+            session_key = _get_session_key(request)
+            session_cart = Cart.objects.get(session_key=session_key)
+            transfer_cart_to_user(session_cart, user)
 
             auth.login(request, user)
             messages.success(request, "You are now logged in.")
