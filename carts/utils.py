@@ -50,3 +50,17 @@ def transfer_cart_to_user(cart, user):
             # If the user does not have a cart yet, transfer the cart to them
             cart.user = user
             cart.save()
+
+
+def get_cart(request):
+    """Return the user's cart or the anonymous cart depending on whether the user is logged in or not.
+    If the cart does not exist, it will raise a Cart.DoesNotExist error."""
+
+    user = request.user
+
+    if user.is_authenticated:
+        cart = Cart.objects.get(user=user)
+    else:
+        session_key = _get_session_key(request)
+        cart = Cart.objects.get(session_key=session_key)
+    return cart

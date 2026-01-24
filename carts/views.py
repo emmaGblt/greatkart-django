@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from store.models import Product, Variation
 from carts.models import Cart, CartItem
 from django.urls import reverse
-from .utils import get_cart_amounts, _get_session_key
+from .utils import get_cart, get_cart_amounts, _get_session_key
 from django.contrib.auth.decorators import login_required
 
 
@@ -10,8 +10,7 @@ def cart(request):
     cart_items = None
 
     try:
-        session_key = _get_session_key(request)
-        cart = Cart.objects.get(session_key=session_key)
+        cart = get_cart(request)
         cart_items = CartItem.objects.filter(cart=cart, is_active=True).select_related(
             "product"
         )
@@ -31,7 +30,7 @@ def cart(request):
 
 def add_product_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    session_key = _get_session_key(request)
+    user = request.user
 
     variations = []
 
@@ -48,9 +47,14 @@ def add_product_to_cart(request, product_id):
 
     # Get the cart or create it
     try:
-        cart = Cart.objects.get(session_key=session_key)
+        cart = get_cart(request)
     except Cart.DoesNotExist:
-        cart = Cart.objects.create(session_key=session_key)
+        print("ee")
+        if user.is_authenticated:
+            cart = Cart.objects.create(user=user)
+        else:
+            session_key = _get_session_key(request)
+            cart = Cart.objects.create(session_key=session_key)
 
     cart.add_product(product, variations, quantity=1)
 
@@ -90,8 +94,7 @@ def checkout(request):
     cart_items = None
 
     try:
-        session_key = _get_session_key(request)
-        cart = Cart.objects.get(session_key=session_key)
+        cart = get_cart(request)
         cart_items = CartItem.objects.filter(cart=cart, is_active=True).select_related(
             "product"
         )
