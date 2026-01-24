@@ -1,8 +1,9 @@
 import pytest
+from accounts.factories import AccountFactory
 from carts.factories import CartFactory, CartItemFactory
-from carts.models import CartItem
+from carts.models import Cart, CartItem
 from store.factories import ProductFactory
-from carts.utils import get_cart_amounts
+from carts.utils import get_cart_amounts, transfer_cart_to_user
 
 
 @pytest.mark.django_db
@@ -34,3 +35,47 @@ def test_get_cart_amounts():
     assert amounts["total_price"] == expected_total_price
     assert amounts["tax"] == expected_tax
     assert amounts["total_with_tax"] == expected_total_price + expected_tax
+
+
+@pytest.mark.django_db
+def test_transfer_cart_to_user():
+    # Create a user
+    user = AccountFactory()
+
+    # Create an anonymous cart
+    cart = CartFactory(user=None)
+
+    # Transfer the empty cart to the user
+    transfer_cart_to_user(cart, user)
+
+    # Check that nothing happened
+    assert cart.user is None
+    assert hasattr(user, "cart") is False
+
+    # Create cart items
+    CartItemFactory(cart=cart)
+    CartItemFactory(cart=cart)
+
+    # Check the cart content
+    assert cart.cart_items.count() == 2
+
+    # Transfer the cart contents to the user
+    transfer_cart_to_user(cart, user)
+
+    # Check that the cart has been transfered directly to the user
+    assert cart.user == user
+    assert user.cart == cart
+    assert cart.cart_items.count() == 2
+
+    # Create a new cart with cart items
+    cart_2 = CartFactory(user=None)
+    CartItemFactory(cart=cart_2)
+    CartItemFactory(cart=cart_2)
+
+    # Transfer the cart contents to the user (user has a cart now)
+    transfer_cart_to_user(cart_2, user)
+
+    # Check that the cart has been deleted and its content transfered
+    assert user.cart.cart_items.count() == 4
+    with pytest.raises(Cart.DoesNotExist):
+        cart_2.refresh_from_db()
