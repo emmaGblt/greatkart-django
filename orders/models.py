@@ -54,9 +54,7 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "Order {0} ({1} {2})".format(
-            self.reference, self.first_name, self.last_name
-        )
+        return "{0} ({1} {2})".format(self.reference, self.first_name, self.last_name)
 
 
 class OrderProduct(models.Model):
