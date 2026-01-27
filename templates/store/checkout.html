@@ -10,7 +10,11 @@
         <div class="card">
           <div class="card-body">
             <h4 class="card-title mb-4">Billing address</h4>
-            <form action="" method="POST" id="checkoutForm">
+            <form
+              action="{% url 'place-order' %}"
+              method="POST"
+              id="checkoutForm"
+            >
               {% csrf_token %}
               <div class="form-row">
                 <div class="col form-group">
