@@ -31,6 +31,7 @@ class Order(models.Model):
     payment = models.OneToOneField(
         Payment, on_delete=models.SET_NULL, blank=True, null=True, related_name="order"
     )
+    reference = models.CharField(max_length=100, blank=True, unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     phone_number = models.CharField(max_length=60)
