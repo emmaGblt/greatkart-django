@@ -1,6 +1,7 @@
 from django.db import models
 from accounts.models import Account
 from store.models import Product, Variation
+import uuid
 
 
 class Payment(models.Model):
@@ -25,13 +26,14 @@ class Order(models.Model):
         CANCELLED: "cancelled",
     }
 
+    reference = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
     user = models.ForeignKey(
         Account, on_delete=models.SET_NULL, null=True, related_name="orders"
     )
     payment = models.OneToOneField(
         Payment, on_delete=models.SET_NULL, blank=True, null=True, related_name="order"
     )
-    reference = models.CharField(max_length=100, blank=True, unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     phone_number = models.CharField(max_length=60)
@@ -52,7 +54,9 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "Order {0} ({1} {2})".format(self.id, self.first_name, self.last_name)
+        return "Order {0} ({1} {2})".format(
+            self.reference, self.first_name, self.last_name
+        )
 
 
 class OrderProduct(models.Model):
