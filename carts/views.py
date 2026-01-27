@@ -49,7 +49,6 @@ def add_product_to_cart(request, product_id):
     try:
         cart = get_cart(request)
     except Cart.DoesNotExist:
-        print("ee")
         if user.is_authenticated:
             cart = Cart.objects.create(user=user)
         else:
