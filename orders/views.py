@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from carts.models import CartItem
 from django.urls import reverse
@@ -47,3 +47,8 @@ def place_order(request):
             return redirect(reverse("checkout"))
     else:
         return redirect(reverse("checkout"))
+
+
+@login_required
+def payments(request):
+    return render(request, "orders/payments.html")
