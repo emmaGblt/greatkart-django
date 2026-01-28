@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% load static %}
+{% extends "base.html" %}
 
 <!-- content -->
 {% block content %}
@@ -110,15 +110,8 @@
               </dd>
             </dl>
             <hr />
-            <p class="text-center mb-3">
-              <img
-                src="{% static './images/misc/payments.png' %}"
-                height="26"
-              />
-            </p>
-            <a href="{% url 'checkout' %}" class="btn btn-primary btn-block">
-              Make payment
-            </a>
+            <!-- Paypal buttons -->
+            <div id="paypal-button-container"></div>
           </div>
           <!-- card-body.// -->
         </div>
@@ -130,4 +123,33 @@
   </div>
   <!-- container .//  -->
 </section>
+<!-- Paypal javascript -->
+<script>
+  const amount = JSON.parse("{{ total_with_tax | safe }}");
+
+  const paypalButtons = window.paypal.Buttons({
+    style: {
+      shape: "rect",
+      layout: "vertical",
+      color: "blue",
+      label: "paypal",
+    },
+
+    async createOrder(data, actions) {
+      return actions.order.create({
+        purchase_units: [{ amount: { value: amount } }],
+      });
+    },
+
+    async onApprove(data, actions) {
+      return actions.order.capture().then((details) => {
+        console.log("details", details);
+        // Show a success message to the buyer
+        alert("Transation completed by " + details.payer.name.given_name + "!");
+      });
+    },
+  });
+  paypalButtons.render("#paypal-button-container");
+</script>
+
 {% endblock %}
