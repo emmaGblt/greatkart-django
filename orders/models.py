@@ -56,6 +56,9 @@ class Order(models.Model):
     def __str__(self):
         return "{0} ({1} {2})".format(self.reference, self.first_name, self.last_name)
 
+    class Meta:
+        ordering = ["-created_at"]
+
 
 class OrderProduct(models.Model):
     order = models.ForeignKey(
