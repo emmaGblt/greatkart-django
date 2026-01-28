@@ -4,35 +4,89 @@
 {% block content %}
 <section class="section-content padding-y bg">
   <div class="container">
-    <!-- ============================ COMPONENT 1 ================================= -->
-
+    <h4 class="mb-3">Review your order</h4>
     <div class="row">
       <aside class="col-lg-8">
-        <div class="card">
+        <div class="card mb-3">
           <h5 class="card-header">Billing address</h5>
           <div class="card-body">
+            <p class="card-text mb-0 font-weight-bold">{{ order.full_name }}</p>
+            <p class="card-text mb-0">{{ order.phone_number }}</p>
+            <p class="card-text">{{ order.email }}</p>
+            <p class="card-text mb-0">{{ order.full_address }}</p>
+            <p class="card-text mb-0">{{ order.city }}, {{ order.state }}</p>
+            <p class="card-text">{{ order.country }}</p>
+            {% if order.note %}
             <p class="card-text">
-              With supporting text below as a natural lead-in to additional
-              content.
+              <span class="font-weight-bold">Order note:</span>
+              <br />
+              {{ order.note }}
             </p>
+            {% endif %}
           </div>
         </div>
-        <div class="card">
+        <div class="card mb-3">
           <h5 class="card-header">Payment method</h5>
           <div class="card-body">
-            <p class="card-text">
-              With supporting text below as a natural lead-in to additional
-              content.
-            </p>
+            <p class="card-text">Paypal</p>
           </div>
         </div>
         <div class="card">
           <h5 class="card-header">Review products</h5>
           <div class="card-body">
-            <p class="card-text">
-              With supporting text below as a natural lead-in to additional
-              content.
-            </p>
+            <table class="table table-borderless table-shopping-cart">
+              <thead class="text-muted">
+                <tr class="small text-uppercase">
+                  <th scope="col">Product</th>
+                  <th scope="col" width="120">Quantity</th>
+                  <th scope="col" width="120">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for cart_item in cart_items %}
+                <tr>
+                  <td>
+                    <figure class="itemside align-items-center">
+                      <div class="aside">
+                        <img
+                          src="{{ cart_item.product.image.url }}"
+                          class="img-xs"
+                        />
+                      </div>
+                      <figcaption class="info">
+                        <a
+                          href="{{ cart_item.product.get_url }}"
+                          class="title text-dark"
+                        >
+                          {{cart_item.product.name}}
+                        </a>
+                        <p class="text-muted small">
+                          {% for variation in cart_item.variations.all %}
+                          <!-- prettier-ignore -->
+                          {{ variation.category | capfirst }}: {{ variation.value | capfirst }}
+                          <br />
+                          <!-- prettier-ignore -->
+                          {% endfor %}
+                        </p>
+                      </figcaption>
+                    </figure>
+                  </td>
+                  <td class="text-center">
+                    <var class="text-muted">{{ cart_item.quantity }}</var>
+                  </td>
+                  <td>
+                    <div class="price-wrap">
+                      <var class="price">${{ cart_item.total_price }}</var>
+                      <small class="text-muted">
+                        ${{ cart_item.product.price }} each
+                      </small>
+                    </div>
+                    <!-- price-wrap .// -->
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
           </div>
         </div>
         <!-- card.// -->
@@ -73,7 +127,6 @@
       <!-- col.// -->
     </div>
     <!-- row.// -->
-    <!-- ============================ COMPONENT 1 END .// ================================= -->
   </div>
   <!-- container .//  -->
 </section>

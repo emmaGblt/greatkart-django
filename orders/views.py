@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_list_or_404
 from django.contrib.auth.decorators import login_required
 from carts.models import CartItem
 from django.urls import reverse
@@ -23,7 +23,6 @@ def place_order(request):
 
         if form.is_valid():
             order_amounts = get_cart_amounts(cart_items)
-
             # Create order instance
             Order.objects.create(
                 user=user,
@@ -42,7 +41,7 @@ def place_order(request):
                 ip=request.META.get("REMOTE_ADDR"),
             )
 
-            return redirect(reverse("checkout"))
+            return redirect(reverse("payments"))
         else:
             return redirect(reverse("checkout"))
     else:
@@ -51,4 +50,19 @@ def place_order(request):
 
 @login_required
 def payments(request):
-    return render(request, "orders/payments.html")
+    user = request.user
+    orders = get_list_or_404(Order, user=user, status=Order.STATUS_CHOICES["new"])
+    order = orders[0]
+
+    cart_items = CartItem.objects.filter(cart__user=user)
+    order_amounts = get_cart_amounts(cart_items)
+
+    context = {
+        "order": order,
+        "total_price": order_amounts["total_price"],
+        "tax": order_amounts["tax"],
+        "total_with_tax": order_amounts["total_with_tax"],
+        "cart_items": cart_items,
+    }
+
+    return render(request, "orders/payments.html", context)
