@@ -2,14 +2,29 @@ from django.contrib import admin
 from .models import Payment, Order, OrderProduct
 
 
+class OrderInline(admin.TabularInline):
+    model = Order
+    show_change_link = True
+    can_delete = False
+    fields = ["user", "total", "status"]
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ["transaction_id", "status", "amount", "method", "created_at"]
+
+    inlines = [OrderInline]
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    readonly_fields = ["reference", "created_at", "updated_at"]
+    readonly_fields = ["reference", "created_at", "updated_at", "payment"]
     fieldsets = [
         (None, {"fields": ["reference", "user", "payment", "status"]}),
         (
