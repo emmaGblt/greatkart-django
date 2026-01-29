@@ -11,6 +11,7 @@ class Payment(models.Model):
     }  # Add other methods later
 
     method = models.CharField(max_length=20, choices=METHOD_CHOICES)
+    transaction_id = models.CharField(max_length=100, unique=True, blank=True)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     status = models.CharField(max_length=100)  # FIXME: un choice !
     created_at = models.DateTimeField(auto_now_add=True)
