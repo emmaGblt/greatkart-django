@@ -13,11 +13,11 @@ class Payment(models.Model):
     method = models.CharField(max_length=20, choices=METHOD_CHOICES)
     transaction_id = models.CharField(max_length=100, unique=True, blank=True)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
-    status = models.CharField(max_length=100)  # FIXME: un choice !
+    status = models.CharField(max_length=100)  # FIXME: pas très clair ce que c'est
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.id
+        return f"User: {self.order.user} - Order: {self.order.reference})"
 
 
 class Order(models.Model):
