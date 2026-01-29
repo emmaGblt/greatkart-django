@@ -2,10 +2,13 @@ from django.shortcuts import redirect, render, get_list_or_404
 from django.contrib.auth.decorators import login_required
 from carts.models import CartItem
 from django.urls import reverse
+from django.contrib import messages
 
 from carts.utils import get_cart_amounts
 from .forms import OrderForm
-from .models import Order
+from .models import Order, Payment
+import json
+from django.core.exceptions import ValidationError
 
 
 @login_required
@@ -51,18 +54,51 @@ def place_order(request):
 @login_required
 def payments(request):
     user = request.user
-    orders = get_list_or_404(Order, user=user, status=Order.STATUS_CHOICES["new"])
-    order = orders[0]
+    if request.method == "POST":
+        body = json.loads(request.body)
+        try:
+            # Retrieve the corresponding order
+            order = Order.objects.get(
+                user=user,
+                status=Order.STATUS_CHOICES["new"],
+                reference=body.get("order_reference"),
+            )
 
-    cart_items = CartItem.objects.filter(cart__user=user)
-    order_amounts = get_cart_amounts(cart_items)
+            # Create the payment instance
+            payment = Payment(
+                method=Payment.METHOD_CHOICES.get(body.get("payment_method")),
+                amount=order.total,
+                transaction_id=body.get("transaction_id"),
+                status=body.get("status"),
+            )
+            print(payment)
+            payment.full_clean()  # Allows to check the method value
+            payment.save()
 
-    context = {
-        "order": order,
-        "total_price": order_amounts["total_price"],
-        "tax": order_amounts["tax"],
-        "total_with_tax": order_amounts["total_with_tax"],
-        "cart_items": cart_items,
-    }
+            # Update the order instance
+            order.payment = payment
+            order.status = Order.STATUS_CHOICES["completed"]
+            order.save()
 
-    return render(request, "orders/payments.html", context)
+            messages.success(request, "Order completed successfully!")
+            return redirect(reverse("payments"))
+        except Order.DoesNotExist, ValidationError:
+            messages.error(request, "Ooops! Something went wrong...")
+            # FIXME: Cancel payment?
+            return redirect(reverse("payments"))
+    else:
+        orders = get_list_or_404(Order, user=user, status=Order.STATUS_CHOICES["new"])
+        order = orders[0]
+
+        cart_items = CartItem.objects.filter(cart__user=user)
+        order_amounts = get_cart_amounts(cart_items)
+
+        context = {
+            "order": order,
+            "total_price": order_amounts["total_price"],
+            "tax": order_amounts["tax"],
+            "total_with_tax": order_amounts["total_with_tax"],
+            "cart_items": cart_items,
+        }
+
+        return render(request, "orders/payments.html", context)

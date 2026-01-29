@@ -5,6 +5,7 @@
 <section class="section-content padding-y bg">
   <div class="container">
     <h4 class="mb-3">Review your order</h4>
+    {% include "includes/alerts.html" %}
     <div class="row">
       <aside class="col-lg-8">
         <div class="card mb-3">
@@ -129,6 +130,8 @@
   src="{% static 'js/paypal.js' %}"
   type="text/javascript"
   data-amount="{{ total_with_tax | safe }}"
+  data-payments-url="{% url 'payments' %}"
+  data-order-reference="{{ order.reference }}"
 ></script>
 
 {% endblock %}
