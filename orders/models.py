@@ -5,7 +5,12 @@ import uuid
 
 
 class Payment(models.Model):
-    method = models.CharField(max_length=100)  # FIXME: un choice serait mieux non ?
+    PAYPAL = "paypal"
+    METHOD_CHOICES = {
+        PAYPAL: "paypal",
+    }  # Add other methods later
+
+    method = models.CharField(max_length=20, choices=METHOD_CHOICES)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     status = models.CharField(max_length=100)  # FIXME: un choice !
     created_at = models.DateTimeField(auto_now_add=True)
