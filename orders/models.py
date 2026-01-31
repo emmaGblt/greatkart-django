@@ -17,7 +17,7 @@ class Payment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"User: {self.order.user} - Order: {self.order.reference})"
+        return f"{self.transaction_id} ({self.method})"
 
 
 class Order(models.Model):
@@ -80,9 +80,10 @@ class OrderProduct(models.Model):
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="+")
     variations = models.ManyToManyField(Variation, blank=True, related_name="+")
+    price = models.IntegerField()  # In case the product price has changed
     quantity = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "{0} (order: {1})".format(self.product.name, self.order.id)
+        return "{0} (order: {1})".format(self.product.name, self.order.reference)
