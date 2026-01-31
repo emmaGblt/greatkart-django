@@ -1,0 +1,16 @@
+{% autoescape off %}
+
+<!-- Line break -->
+
+Hi {{ user.first_name }} !
+
+<!-- content -->
+
+Your order has been received!
+
+<!-- prettier-ignore -->
+
+Order number: {{ order.reference }}
+
+<!-- Line break -->
+{%endautoescape %}

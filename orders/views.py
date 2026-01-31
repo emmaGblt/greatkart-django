@@ -10,6 +10,8 @@ from .forms import OrderForm
 from .models import Order, Payment, OrderProduct
 import json
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 
 @login_required
@@ -104,6 +106,15 @@ def payments(request):
             cart_items.delete()
 
             # Send email
+            mail_subject = "Thank you for your order!"
+            mail_message = render_to_string(
+                "orders/order_received_email.html",
+                {"user": user, "order": order},
+            )
+            recipient_email = user.email
+            send_mail(
+                mail_subject, mail_message, None, recipient_list=[recipient_email]
+            )
 
             # Send JSON response to JS method savePaymentData
             messages.success(request, "Order completed successfully!")
