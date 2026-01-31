@@ -79,7 +79,7 @@ class OrderProduct(models.Model):
         Order, on_delete=models.CASCADE, related_name="order_products"
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="+")
-    variation = models.ManyToManyField(Variation, blank=True, related_name="+")
+    variations = models.ManyToManyField(Variation, blank=True, related_name="+")
     quantity = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
