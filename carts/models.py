@@ -12,7 +12,7 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.session_key}"
+        return f"{self.session_key or self.user}"
 
     def add_product(self, product, variations=[], quantity=1):
         """Add a product and its variations to the cart by creating or updating a cart item."""
