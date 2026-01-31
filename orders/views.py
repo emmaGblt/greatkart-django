@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from carts.models import CartItem
 from django.urls import reverse
 from django.contrib import messages
+from store.models import Product
 
 from carts.utils import get_cart_amounts
 from .forms import OrderForm
@@ -94,11 +95,13 @@ def payments(request):
                 if cart_item.variations.exists():
                     new_order_product.variations.set(cart_item.variations.all())
 
+                # Update the product quantity
+                product = Product.objects.get(id=cart_item.product.id)
+                product.stock -= cart_item.quantity
+                product.save()  # FIXME: Gérer la vérification des stocks avant la commande
+
+            # Clear the cart (delete the cart items)
             cart_items.delete()
-
-            # Update the product quantities
-
-            # Clear the cart
 
             # Send email
 
