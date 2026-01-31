@@ -22,6 +22,20 @@ class PaymentAdmin(admin.ModelAdmin):
     inlines = [OrderInline]
 
 
+class OrderProductInline(admin.TabularInline):
+    model = OrderProduct
+    fields = ["product", "variations", "price", "quantity"]
+
+    show_change_link = True
+    can_delete = False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ["reference", "full_name", "total", "tax", "status"]
@@ -29,6 +43,7 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ["reference", "first_name", "last_name", "email"]
 
     readonly_fields = ["reference", "created_at", "updated_at", "payment"]
+    inlines = [OrderProductInline]
     fieldsets = [
         (None, {"fields": ["reference", "user", "payment", "status"]}),
         (
@@ -55,4 +70,6 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(OrderProduct)
 class OrderProductAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["order", "product", "price", "quantity"]
+
+    readonly_fields = ["order", "product", "price", "quantity", "variations"]
