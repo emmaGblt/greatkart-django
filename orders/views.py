@@ -6,7 +6,7 @@ from django.contrib import messages
 
 from carts.utils import get_cart_amounts
 from .forms import OrderForm
-from .models import Order, Payment
+from .models import Order, Payment, OrderProduct
 import json
 from django.core.exceptions import ValidationError
 
@@ -71,7 +71,6 @@ def payments(request):
                 transaction_id=body.get("transaction_id"),
                 status=body.get("status"),
             )
-            print(payment)
             payment.full_clean()  # Allows to check the method value
             payment.save()
 
@@ -80,10 +79,33 @@ def payments(request):
             order.status = Order.STATUS_CHOICES["completed"]
             order.save()
 
+            # Create the order products
+            cart_items = CartItem.objects.filter(cart__user=user).select_related(
+                "product"
+            )
+
+            for cart_item in cart_items:
+                new_order_product = OrderProduct.objects.create(
+                    order=order,
+                    product=cart_item.product,
+                    quantity=cart_item.quantity,
+                    price=cart_item.product.price,
+                )
+                if cart_item.variations.exists():
+                    new_order_product.variations.set(cart_item.variations.all())
+
+            # Update the product quantities
+
+            # Clear the cart
+
+            # Send email
+
+            # Send JSON response to JS method savePaymentData
             messages.success(request, "Order completed successfully!")
             return redirect(reverse("payments"))
-        except Order.DoesNotExist, ValidationError:
+        except (Order.DoesNotExist, ValidationError) as e:
             messages.error(request, "Ooops! Something went wrong...")
+            print(e)
             # FIXME: Cancel payment?
             return redirect(reverse("payments"))
     else:
