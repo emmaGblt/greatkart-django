@@ -94,6 +94,8 @@ def payments(request):
                 if cart_item.variations.exists():
                     new_order_product.variations.set(cart_item.variations.all())
 
+            cart_items.delete()
+
             # Update the product quantities
 
             # Clear the cart
