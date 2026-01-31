@@ -24,6 +24,10 @@ class PaymentAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    list_display = ["reference", "full_name", "total", "tax", "status"]
+    list_filter = ["status"]
+    search_fields = ["reference", "first_name", "last_name", "email"]
+
     readonly_fields = ["reference", "created_at", "updated_at", "payment"]
     fieldsets = [
         (None, {"fields": ["reference", "user", "payment", "status"]}),
