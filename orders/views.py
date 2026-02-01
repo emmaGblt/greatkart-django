@@ -2,7 +2,6 @@ from django.shortcuts import redirect, render, get_list_or_404
 from django.contrib.auth.decorators import login_required
 from carts.models import CartItem
 from django.urls import reverse
-from django.contrib import messages
 from store.models import Product
 
 from carts.utils import get_cart_amounts
@@ -12,6 +11,7 @@ import json
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.http import JsonResponse
 
 
 @login_required
@@ -117,11 +117,12 @@ def payments(request):
             )
 
             # Send JSON response to JS method savePaymentData
-            messages.success(request, "Order completed successfully!")
-            return redirect(reverse("payments"))
-        except (Order.DoesNotExist, ValidationError) as e:
-            messages.error(request, "Ooops! Something went wrong...")
-            print(e)
+            data = {
+                "order_reference": order.reference,
+                "transaction_id": payment.transaction_id,
+            }
+            return JsonResponse(data)
+        except Order.DoesNotExist, ValidationError:
             # FIXME: Cancel payment?
             return redirect(reverse("payments"))
     else:
