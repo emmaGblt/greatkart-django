@@ -1,6 +1,8 @@
 from django.db import models
+from accounts.models import Account
 from category.models import Category
 from django.urls import reverse
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Product(models.Model):
@@ -52,3 +54,25 @@ class Variation(models.Model):
 
     def __str__(self):
         return f"{self.product} ({self.category}: {self.value})"
+
+
+class ProductReview(models.Model):
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="product_reviews"
+    )
+    user = models.ForeignKey(
+        Account, on_delete=models.CASCADE, related_name="product_reviews"
+    )
+    title = models.CharField(max_length=100, blank=True)
+    content = models.CharField(max_length=500, blank=True)
+    rating = models.DecimalField(
+        max_digits=3,
+        decimal_places=2,
+        validators=[MinValueValidator(0), MaxValueValidator(5)],
+    )
+    visible = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.product} ({self.user})"
