@@ -144,4 +144,24 @@ def payments(request):
 
 
 def order_completed(request):
-    return render(request, "orders/order_completed.html")
+    order_reference = request.GET.get("order_reference")
+    transaction_id = request.GET.get("transaction_id")
+
+    try:
+        order = Order.objects.get(
+            reference=order_reference, status=Order.STATUS_CHOICES["completed"]
+        )
+        order_products = OrderProduct.objects.filter(order=order)
+
+        payment = Payment.objects.get(transaction_id=transaction_id)
+
+        context = {
+            "order": order,
+            "order_products": order_products,
+            "payment": payment,
+            "subtotal": order.total - order.tax,
+        }
+
+        return render(request, "orders/order_completed.html", context)
+    except Order.DoesNotExist, Payment.DoesNotExist:
+        return redirect(reverse("home"))
