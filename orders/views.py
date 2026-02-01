@@ -140,3 +140,7 @@ def payments(request):
         }
 
         return render(request, "orders/payments.html", context)
+
+
+def order_completed(request):
+    return render(request, "orders/order_completed.html")
