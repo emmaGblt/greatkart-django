@@ -132,6 +132,7 @@
   data-amount="{{ total_with_tax | safe }}"
   data-payments-url="{% url 'payments' %}"
   data-order-reference="{{ order.reference }}"
+  data-redirect-url="{% url 'order-completed' %}"
 ></script>
 
 {% endblock %}

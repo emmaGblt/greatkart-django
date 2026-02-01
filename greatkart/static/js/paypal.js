@@ -8,6 +8,7 @@ const scriptData = paypalScript?.dataset;
 const amount = scriptData?.amount;
 const paymentsUrl = scriptData?.paymentsUrl;
 const orderReference = scriptData?.orderReference;
+const redirectUrl = scriptData?.redirectUrl;
 
 function getCookie(name) {
   let cookieValue = null;
@@ -40,7 +41,15 @@ function savePaymentData(details) {
     }),
   })
     .then((response) => response.json())
-    .then((data) => console.log(data));
+    .then((data) => {
+      const { order_reference: orderReference, transaction_id: transactionId } =
+        data;
+      const searchParams = new URLSearchParams({
+        order_reference: orderReference,
+        transaction_id: transactionId,
+      });
+      window.location.href = `${redirectUrl}?${searchParams.toString()}`;
+    });
 }
 
 const paypalButtons = window.paypal.Buttons({
