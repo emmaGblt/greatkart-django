@@ -11,4 +11,5 @@ urlpatterns = [
         name="product-detail",
     ),
     path("search/", views.search, name="search"),
+    path("submit-review/<int:product_id>/", views.submit_review, name="submit-review"),
 ]
