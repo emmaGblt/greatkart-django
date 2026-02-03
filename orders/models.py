@@ -89,4 +89,4 @@ class OrderProduct(models.Model):
         return "{0} (order: {1})".format(self.product.name, self.order.reference)
 
     class Meta:
-        ordering = ["-created_at"]
+        ordering = ["-updated_at"]
