@@ -30,9 +30,7 @@ def store(request, category_slug=None):
 def product_detail(request, category_slug=None, product_slug=None):
     product = get_object_or_404(Product, slug=product_slug)
 
-    product_review_form = ProductReviewForm()
-
-    context = {"product": product, "product_review_form": product_review_form}
+    context = {"product": product}
 
     return render(request, "store/product_detail.html", context)
 
