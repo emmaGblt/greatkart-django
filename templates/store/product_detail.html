@@ -91,7 +91,11 @@
         <header class="section-heading">
           <h3>Customer Reviews</h3>
         </header>
-        {% include "includes/alerts.html" %} {% if user.is_authenticated %}
+        {% include "includes/alerts.html" %}
+        <!-- Check authentication -->
+        {% if user.is_authenticated %}
+        <!-- Check product purchase -->
+        {% if has_ordered_product %}
         <form action="{% url 'submit-review' product.id %}" method="POST">
           {% csrf_token %}
           <h4 class="mb-3">Add you review</h4>
@@ -189,23 +193,15 @@
             </div>
             <div class="col form-group">
               <label for="title">Review title</label>
-              <input
-                type="text"
-                name="title"
-                required
-                id="title"
-                class="form-control"
-              />
+              <input type="text" name="title" id="title" class="form-control" />
             </div>
             <div class="col form-group">
               <label for="content">Review content</label>
               <textarea
                 name="content"
-                required
                 id="content"
                 class="form-control"
                 rows="4"
-                required
               ></textarea>
             </div>
             <div class="col form-group">
@@ -214,11 +210,16 @@
           </div>
         </form>
         {% else %}
+        <p>You must purchase this product to post a review.</p>
+        {% endif %}
+        <!-- Enf of purchase check -->
+        {% else %}
         <p>
           You must be logged in to post a review.
           <a href="{% url 'login' %}">Login now</a>
         </p>
         {% endif %}
+        <!-- End of authentication check -->
 
         <article class="box mb-3">
           <div class="icontext w-100">
