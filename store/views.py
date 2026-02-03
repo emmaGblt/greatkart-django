@@ -39,7 +39,14 @@ def product_detail(request, category_slug=None, product_slug=None):
     else:
         has_ordered_product = False
 
-    context = {"product": product, "has_ordered_product": has_ordered_product}
+    # Get the product reviews
+    product_reviews = ProductReview.objects.filter(product=product, is_visible=True)
+
+    context = {
+        "product": product,
+        "has_ordered_product": has_ordered_product,
+        "product_reviews": product_reviews,
+    }
 
     return render(request, "store/product_detail.html", context)
 
