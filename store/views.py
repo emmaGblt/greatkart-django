@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 
+from orders.models import OrderProduct
 from store.forms import ProductReviewForm
 from .models import Product, ProductReview
 from category.models import Category
@@ -29,8 +30,16 @@ def store(request, category_slug=None):
 
 def product_detail(request, category_slug=None, product_slug=None):
     product = get_object_or_404(Product, slug=product_slug)
+    user = request.user
 
-    context = {"product": product}
+    if user.is_authenticated:
+        has_ordered_product = OrderProduct.objects.filter(
+            order__user=user, product=product
+        ).exists()
+    else:
+        has_ordered_product = False
+
+    context = {"product": product, "has_ordered_product": has_ordered_product}
 
     return render(request, "store/product_detail.html", context)
 
