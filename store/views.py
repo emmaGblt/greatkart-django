@@ -65,6 +65,7 @@ def search(request):
 
 
 def submit_review(request, product_id):
+    # FIXME: ajouter les vérifications ici aussi (utilisateur connecté + produit acheté)
     product = get_object_or_404(Product, id=product_id)
     user = request.user
     url = request.META.get("HTTP_REFERER")
