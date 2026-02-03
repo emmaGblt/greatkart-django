@@ -18,4 +18,5 @@ class VariationAdmin(admin.ModelAdmin):
 
 @admin.register(ProductReview)
 class ProductReviewAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["product", "user", "rating", "is_visible"]
+    list_filter = ["product", "is_visible"]

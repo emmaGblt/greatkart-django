@@ -70,7 +70,7 @@ class ProductReview(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0), MaxValueValidator(5)],
     )
-    visible = models.BooleanField(default=True)
+    is_visible = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
