@@ -4,7 +4,6 @@
 {% block content %}
 <section class="section-content padding-y bg">
   <div class="container">
-    <!-- ============================ COMPONENT 1 ================================= -->
     <div class="card">
       <div class="row no-gutters">
         <aside class="col-md-6">
@@ -92,8 +91,8 @@
         <header class="section-heading">
           <h3>Customer Reviews</h3>
         </header>
-
-        <form action="" method="POST">
+        {% include "includes/alerts.html" %} {% if user.is_authenticated %}
+        <form action="{% url 'submit-review' product.id %}" method="POST">
           {% csrf_token %}
           <h4 class="mb-3">Add you review</h4>
           <div>
@@ -209,11 +208,18 @@
                 required
               ></textarea>
             </div>
+            {{ product_review_form.errors }}
             <div class="col form-group">
               <button type="submit" class="btn btn-primary">Submit</button>
             </div>
           </div>
         </form>
+        {% else %}
+        <p>
+          You must be logged in to post a review.
+          <a href="{% url 'login' %}">Login now</a>
+        </p>
+        {% endif %}
 
         <article class="box mb-3">
           <div class="icontext w-100">
