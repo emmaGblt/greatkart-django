@@ -89,6 +89,7 @@ class ProductReview(models.Model):
         return f"{self.product} ({self.user})"
 
     class Meta:
+        ordering = ["-updated_at"]
         constraints = [
             models.UniqueConstraint(fields=["product", "user"], name="unique_review"),
         ]
