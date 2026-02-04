@@ -231,7 +231,7 @@
                 {{ product_review.updated_at|time:"H:i" }}
               </span>
               <h6 class="mb-2">{{ product_review.user.full_name }}</h6>
-              <div class="rating-star">
+              <div>
                 <i
                   class="fa-sharp{% if product_review.rating >= 1 %} fa-solid fa-star {% elif product_review.rating == 0.5 %} fa-solid fa-star-half-stroke{% else %} fa-regular fa-star{% endif %}"
                   style="color: #ffb503"
