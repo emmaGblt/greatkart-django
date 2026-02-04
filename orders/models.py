@@ -87,6 +87,3 @@ class OrderProduct(models.Model):
 
     def __str__(self):
         return "{0} (order: {1})".format(self.product.name, self.order.reference)
-
-    class Meta:
-        ordering = ["-updated_at"]
