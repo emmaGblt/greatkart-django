@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% load static %}
+{% extends "base.html" %} {% load static %} {% load showratingstars %}
 
 <!-- content -->
 {% block content %}
@@ -23,6 +23,7 @@
             {% csrf_token %}
             <article class="content-body">
               <h2 class="title">{{ product.name }}</h2>
+              here {{ product.average_rating }}
 
               <div class="mb-3">
                 <var class="price h4">${{ product.price }}</var>
@@ -231,28 +232,7 @@
                 {{ product_review.updated_at|time:"H:i" }}
               </span>
               <h6 class="mb-2">{{ product_review.user.full_name }}</h6>
-              <div>
-                <i
-                  class="fa-sharp{% if product_review.rating >= 1 %} fa-solid fa-star {% elif product_review.rating == 0.5 %} fa-solid fa-star-half-stroke{% else %} fa-regular fa-star{% endif %}"
-                  style="color: #ffb503"
-                ></i>
-                <i
-                  class="fa-sharp{% if product_review.rating >= 2 %} fa-solid fa-star{% elif product_review.rating == 1.5 %} fa-solid fa-star-half-stroke{% else %} fa-regular fa-star{% endif %}"
-                  style="color: #ffb503"
-                ></i>
-                <i
-                  class="fa-sharp{% if product_review.rating >= 3 %} fa-solid fa-star{% elif product_review.rating == 2.5 %} fa-solid fa-star-half-stroke{% else %} fa-regular fa-star{% endif %}"
-                  style="color: #ffb503"
-                ></i>
-                <i
-                  class="fa-sharp{% if product_review.rating >= 4 %} fa-solid fa-star{% elif product_review.rating == 3.5 %} fa-solid fa-star-half-stroke{% else %} fa-regular fa-star{% endif %}"
-                  style="color: #ffb503"
-                ></i>
-                <i
-                  class="fa-sharp{% if product_review.rating >= 5 %} fa-solid fa-star{% elif product_review.rating == 4.5 %} fa-solid fa-star-half-stroke{% else %} fa-regular fa-star{% endif %}"
-                  style="color: #ffb503"
-                ></i>
-              </div>
+              {% showratingstars product_review.rating %}
             </div>
           </div>
           <!-- icontext.// -->
