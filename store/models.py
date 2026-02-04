@@ -23,6 +23,17 @@ class Product(models.Model):
     def get_url(self):
         return reverse("product-detail", args=[self.category.slug, self.slug])
 
+    @property
+    def average_rating(self):
+        result = ProductReview.objects.filter(product=self, is_visible=True).aggregate(
+            average=models.Avg("rating")
+        )
+        return result["average"] or 0
+
+    @property
+    def reviews_count(self):
+        return ProductReview.objects.filter(product=self, is_visible=True).count()
+
     class Meta:
         ordering = ["-created_at"]
 
