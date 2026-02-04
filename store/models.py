@@ -87,3 +87,8 @@ class ProductReview(models.Model):
 
     def __str__(self):
         return f"{self.product} ({self.user})"
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["product", "user"], name="unique_review"),
+        ]
