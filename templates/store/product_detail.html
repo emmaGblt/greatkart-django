@@ -23,7 +23,10 @@
             {% csrf_token %}
             <article class="content-body">
               <h2 class="title">{{ product.name }}</h2>
-              here {{ product.average_rating }}
+              <div class="mb-2 d-flex">
+                {% showratingstars product.average_rating %}
+                <p class="pl-2">{{ product.reviews_count }} reviews</p>
+              </div>
 
               <div class="mb-3">
                 <var class="price h4">${{ product.price }}</var>
@@ -91,136 +94,147 @@
       <div class="col-md-9">
         <header class="section-heading">
           <h3>Customer Reviews</h3>
-        </header>
-        {% include "includes/alerts.html" %}
-        <!-- Check authentication -->
-        {% if user.is_authenticated %}
-        <!-- Check product purchase -->
-        {% if has_ordered_product %}
-        <form action="{% url 'submit-review' product.id %}" method="POST">
-          {% csrf_token %}
-          <h4 class="mb-3">Add you review</h4>
-          <div>
-            <!-- Rating stars -->
-            <div class="col form-group mb-2">
-              <p class="mb-2">How would you rate this product?</p>
-              <div class="rate">
-                <input
-                  type="radio"
-                  name="rating"
-                  id="rating10"
-                  value="5"
-                  required
-                />
-                <label for="rating10" title="5" class="mb-0"></label>
-                <input
-                  type="radio"
-                  name="rating"
-                  id="rating9"
-                  value="4.5"
-                  required
-                />
-                <label for="rating9" title="4.5" class="half mb-0"></label>
-                <input
-                  type="radio"
-                  name="rating"
-                  id="rating8"
-                  value="4"
-                  required
-                />
-                <label for="rating8" title="4" class="mb-0"></label>
-                <input
-                  type="radio"
-                  name="rating"
-                  id="rating7"
-                  value="3.5"
-                  required
-                />
-                <label for="rating7" title="3.5" class="half mb-0"></label>
-                <input
-                  type="radio"
-                  name="rating"
-                  id="rating6"
-                  value="3"
-                  required
-                />
-                <label for="rating6" title="3" class="mb-0"></label>
-                <input
-                  type="radio"
-                  name="rating"
-                  id="rating5"
-                  value="2.5"
-                  required
-                />
-                <label
-                  for="rating5"
-                  title="2.5"
-                  class="half mb-0"
-                  class="mb-0"
-                ></label>
-                <input
-                  type="radio"
-                  name="rating"
-                  id="rating4"
-                  value="2"
-                  required
-                />
-                <label for="rating4" title="2" class="mb-0"></label>
-                <input
-                  type="radio"
-                  name="rating"
-                  id="rating3"
-                  value="1.5"
-                  required
-                />
-                <label for="rating3" title="1.5" class="half mb-0"></label>
-                <input
-                  type="radio"
-                  name="rating"
-                  id="rating2"
-                  value="1"
-                  required
-                />
-                <label for="rating2" title="1" class="mb-0"></label>
-                <input
-                  type="radio"
-                  name="rating"
-                  id="rating1"
-                  value="0.5"
-                  required
-                />
-                <label for="rating1" title="0.5" class="half mb-0"></label>
+          {% include "includes/alerts.html" %}
+          <!-- Check authentication -->
+          {% if user.is_authenticated %}
+          <!-- Check product purchase -->
+          {% if has_ordered_product %}
+          <div class="mb-4">
+            <form action="{% url 'submit-review' product.id %}" method="POST">
+              {% csrf_token %}
+              <h4 class="mb-3">Add you review</h4>
+              <div>
+                <!-- Rating stars -->
+                <div class="col form-group mb-2">
+                  <p class="mb-2">How would you rate this product?</p>
+                  <div class="rate">
+                    <input
+                      type="radio"
+                      name="rating"
+                      id="rating10"
+                      value="5"
+                      required
+                    />
+                    <label for="rating10" title="5" class="mb-0"></label>
+                    <input
+                      type="radio"
+                      name="rating"
+                      id="rating9"
+                      value="4.5"
+                      required
+                    />
+                    <label for="rating9" title="4.5" class="half mb-0"></label>
+                    <input
+                      type="radio"
+                      name="rating"
+                      id="rating8"
+                      value="4"
+                      required
+                    />
+                    <label for="rating8" title="4" class="mb-0"></label>
+                    <input
+                      type="radio"
+                      name="rating"
+                      id="rating7"
+                      value="3.5"
+                      required
+                    />
+                    <label for="rating7" title="3.5" class="half mb-0"></label>
+                    <input
+                      type="radio"
+                      name="rating"
+                      id="rating6"
+                      value="3"
+                      required
+                    />
+                    <label for="rating6" title="3" class="mb-0"></label>
+                    <input
+                      type="radio"
+                      name="rating"
+                      id="rating5"
+                      value="2.5"
+                      required
+                    />
+                    <label
+                      for="rating5"
+                      title="2.5"
+                      class="half mb-0"
+                      class="mb-0"
+                    ></label>
+                    <input
+                      type="radio"
+                      name="rating"
+                      id="rating4"
+                      value="2"
+                      required
+                    />
+                    <label for="rating4" title="2" class="mb-0"></label>
+                    <input
+                      type="radio"
+                      name="rating"
+                      id="rating3"
+                      value="1.5"
+                      required
+                    />
+                    <label for="rating3" title="1.5" class="half mb-0"></label>
+                    <input
+                      type="radio"
+                      name="rating"
+                      id="rating2"
+                      value="1"
+                      required
+                    />
+                    <label for="rating2" title="1" class="mb-0"></label>
+                    <input
+                      type="radio"
+                      name="rating"
+                      id="rating1"
+                      value="0.5"
+                      required
+                    />
+                    <label for="rating1" title="0.5" class="half mb-0"></label>
+                  </div>
+                </div>
+                <div class="col form-group">
+                  <label for="title">Review title</label>
+                  <input
+                    type="text"
+                    name="title"
+                    id="title"
+                    class="form-control"
+                  />
+                </div>
+                <div class="col form-group">
+                  <label for="content">Review content</label>
+                  <textarea
+                    name="content"
+                    id="content"
+                    class="form-control"
+                    rows="4"
+                  ></textarea>
+                </div>
+                <div class="col form-group">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
               </div>
-            </div>
-            <div class="col form-group">
-              <label for="title">Review title</label>
-              <input type="text" name="title" id="title" class="form-control" />
-            </div>
-            <div class="col form-group">
-              <label for="content">Review content</label>
-              <textarea
-                name="content"
-                id="content"
-                class="form-control"
-                rows="4"
-              ></textarea>
-            </div>
-            <div class="col form-group">
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
+            </form>
           </div>
-        </form>
-        {% else %}
-        <p>You must purchase this product to post a review.</p>
-        {% endif %}
-        <!-- Enf of purchase check -->
-        {% else %}
-        <p>
-          You must be logged in to post a review.
-          <a href="{% url 'login' %}">Login now</a>
-        </p>
-        {% endif %}
-        <!-- End of authentication check -->
+          {% else %}
+          <p>You must purchase this product to post a review.</p>
+          {% endif %}
+          <!-- Enf of purchase check -->
+          {% else %}
+          <p>
+            You must be logged in to post a review.
+            <a href="{% url 'login' %}">Login now</a>
+          </p>
+          {% endif %}
+          <!-- End of authentication check -->
+          <div class="mb-2 d-flex">
+            {% showratingstars product.average_rating %}
+            <p class="pl-2">{{ product.reviews_count }} reviews</p>
+          </div>
+        </header>
 
         {% for product_review in product_reviews %}
         <article class="box mb-3">
