@@ -5,24 +5,53 @@ from django.conf import settings
 from django.db import migrations, models
 
 
-class Migration(migrations.Migration):
+def create_user_profiles(apps, schema_editor):
+    Account = apps.get_model("accounts", "Account")
+    UserProfile = apps.get_model("accounts", "UserProfile")
 
+    user_profiles = []
+
+    accounts = Account.objects.all()
+
+    for account in accounts:
+        user_profile = UserProfile(user=account, picture="default/default-user.png")
+        user_profiles.append(user_profile)
+
+    UserProfile.objects.bulk_create(user_profiles)
+
+
+class Migration(migrations.Migration):
     dependencies = [
-        ('accounts', '0004_rename_is_superadmin_account_is_superuser'),
+        ("accounts", "0004_rename_is_superadmin_account_is_superuser"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='UserProfile',
+            name="UserProfile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('address_line_1', models.CharField(blank=True, max_length=50)),
-                ('address_line_2', models.CharField(blank=True, max_length=50)),
-                ('city', models.CharField(blank=True, max_length=50)),
-                ('state', models.CharField(blank=True, max_length=50)),
-                ('country', models.CharField(blank=True, max_length=50)),
-                ('picture', models.ImageField(blank=True, upload_to='userprofile/')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("address_line_1", models.CharField(blank=True, max_length=50)),
+                ("address_line_2", models.CharField(blank=True, max_length=50)),
+                ("city", models.CharField(blank=True, max_length=50)),
+                ("state", models.CharField(blank=True, max_length=50)),
+                ("country", models.CharField(blank=True, max_length=50)),
+                ("picture", models.ImageField(blank=True, upload_to="userprofile/")),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
+        migrations.RunPython(create_user_profiles, migrations.RunPython.noop),
     ]
