@@ -213,4 +213,9 @@ def reset_password(request):
 
 @login_required
 def my_orders(request):
-    return render(request, "accounts/my_orders.html")
+    user = request.user
+
+    orders = Order.objects.filter(user=user, status=Order.STATUS_CHOICES["completed"])
+
+    context = {"orders": orders}
+    return render(request, "accounts/my_orders.html", context)
