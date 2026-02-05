@@ -14,10 +14,10 @@
       Orders
     </a>
     <a
-      class="list-group-item {% if '/profile/' in request.path %}active{%endif%}"
-      href="#"
+      class="list-group-item {% if '/edit-profile/' in request.path %}active{%endif%}"
+      href="{% url 'edit-profile' %}"
     >
-      Profile
+      Edit profile
     </a>
     <a
       class="list-group-item {% if '/security/' in request.path %}active{%endif%}"
