@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import Account
+from .models import Account, UserProfile
 
 from django import forms
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
+from django.utils.html import format_html
 
 
 class AccountCreationForm(forms.ModelForm):
@@ -106,3 +107,15 @@ class AccountAdmin(BaseUserAdmin):
             },
         ),
     ]
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ["user", "city", "state", "country", "thumbnail"]
+
+    @admin.display(description="User profile pic.")
+    def thumbnail(self, object):
+        return format_html(
+            "<img src={} width='30' height='30' style='border-radius:50%;' />",
+            object.picture.url,
+        )
