@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 
 from carts.models import Cart
+from orders.models import Order
 from .forms import RegistrationForm
 from .models import Account
 from django.contrib import messages, auth
@@ -118,7 +119,14 @@ def activate_account(request, uidb64, token):
 
 @login_required
 def dashboard(request):
-    return render(request, "accounts/dashboard.html")
+    user = request.user
+
+    orders_count = Order.objects.filter(
+        user=user, status=Order.STATUS_CHOICES["completed"]
+    ).count()
+
+    context = {"orders_count": orders_count}
+    return render(request, "accounts/dashboard.html", context)
 
 
 def index(request):
