@@ -130,7 +130,9 @@ def dashboard(request):
         user=user, status=Order.STATUS_CHOICES["completed"]
     ).count()
 
-    context = {"orders_count": orders_count}
+    user_profile = UserProfile.objects.get(user=user)
+
+    context = {"orders_count": orders_count, "user_profile": user_profile}
     return render(request, "accounts/dashboard.html", context)
 
 
