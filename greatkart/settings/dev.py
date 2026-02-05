@@ -1,7 +1,10 @@
 from .base import Base, BASE_DIR
+import os
 
 
 class Dev(Base):
+    DOTENV = os.path.join(BASE_DIR, ".env")
+
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
