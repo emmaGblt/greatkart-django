@@ -1,10 +1,30 @@
 <aside class="col-md-3">
   <!--   SIDEBAR   -->
   <ul class="list-group">
-    <a class="list-group-item active" href="#"> Dashboard </a>
-    <a class="list-group-item" href="#"> Orders </a>
-    <a class="list-group-item" href="#"> Profile </a>
-    <a class="list-group-item" href="#"> Security </a>
+    <a
+      class="list-group-item {% if '/dashboard/' in request.path %}active{%endif%}"
+      href="{% url 'dashboard' %}"
+    >
+      Dashboard
+    </a>
+    <a
+      class="list-group-item {% if '/my-orders/' in request.path %}active{%endif%}"
+      href="{% url 'my-orders' %}"
+    >
+      Orders
+    </a>
+    <a
+      class="list-group-item {% if '/profile/' in request.path %}active{%endif%}"
+      href="#"
+    >
+      Profile
+    </a>
+    <a
+      class="list-group-item {% if '/security/' in request.path %}active{%endif%}"
+      href="#"
+    >
+      Security
+    </a>
   </ul>
   <br />
   <a class="btn btn-light btn-block" href="{% url 'logout' %}">
