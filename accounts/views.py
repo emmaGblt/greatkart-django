@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from carts.models import Cart
 from orders.models import Order
 from .forms import RegistrationForm
-from .models import Account
+from .models import Account, UserProfile
 from django.contrib import messages, auth
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -31,6 +31,11 @@ def register(request):
             user = Account.objects.create_user(first_name, last_name, email, password)
             user.phone_number = phone_number
             user.save()
+
+            # CREATE A USER PROFILE
+            UserProfile.objects.create(
+                user=user, picture="default/default-user.png"
+            )  # See medit/default/default-user.png
 
             # SEND A LINK TO ACTIVATE THE USER (= EMAIL ADDRESS VALIDATION)
             current_site = get_current_site(request)
