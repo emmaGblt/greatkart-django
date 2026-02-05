@@ -209,3 +209,8 @@ def reset_password(request):
             messages.error(request, "Passwords do not match!")
             return redirect(reverse("reset-password"))
     return render(request, "accounts/reset_password.html")
+
+
+@login_required
+def my_orders(request):
+    return render(request, "accounts/my_orders.html")

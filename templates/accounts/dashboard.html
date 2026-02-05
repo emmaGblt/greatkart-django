@@ -14,25 +14,27 @@
             <span>{{ user.full_name }}</span>
           </header>
           <div class="card-body">
-            <div class="row">
+            <div class="row align-items-stretch">
               <div class="col-md-6">
-                <div class="card">
-                  <div class="card-body">
+                <div class="card h-100">
+                  <div
+                    class="card-body text-center d-flex flex-column justify-content-center"
+                  >
                     <h5 class="card-title">Total orders</h5>
                     <p class="h4">{{ orders_count }}</p>
-                    <a href="">View orders</a>
+                    <a href="{% url 'my-orders' %}">View orders</a>
                   </div>
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="card">
+                <div class="card h-100">
                   <div class="card-body">
                     <img
                       src="https://www.w3schools.com/w3images/avatar6.png"
                       alt="User profile picture"
                       height="50"
                       width="50"
-                      class="rounded-pill mb-4 mx-auto d-block"
+                      class="rounded-pill mb-3 mx-auto d-block"
                     />
                     <p class="mb-0">
                       <span class="font-weight-bold">Email: </span>
