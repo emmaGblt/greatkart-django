@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 class Base(Configuration):
-    SECRET_KEY = values.Value(environ_required=True)
+    SECRET_KEY = values.Value(environ=True)
 
     # Application definition
 
@@ -108,15 +108,10 @@ class Base(Configuration):
     }
 
     # Email configuration
-    # from dotenv import load_dotenv
-    # import os
-
-    # load_dotenv()
-
-    # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend" # Too much security on my Gmail address
-    # EMAIL_HOST = "smtp.gmail.com"
-    # EMAIL_PORT = 587
-    # EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-    # EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-    # EMAIL_USE_TLS = True
-    # EMAIL_USE_SSL = False
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = values.Value(environ=True)
+    EMAIL_PORT = values.Value(environ=True)
+    EMAIL_HOST_USER = values.Value(environ=True)
+    EMAIL_HOST_PASSWORD = values.Value(environ=True)
+    EMAIL_USE_TLS = values.Value(environ=True)
+    EMAIL_USE_SSL = values.Value(environ=True)

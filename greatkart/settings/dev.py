@@ -2,9 +2,6 @@ from .base import Base, BASE_DIR
 
 
 class Dev(Base):
-    # SECURITY WARNING: keep the secret key used in production secret!
-    SECRET_KEY = "django-insecure-p23nt6)t$rkazp!%6$ce26nunet%46valma##pxh&7we!0phs!"
-
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
 
