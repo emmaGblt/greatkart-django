@@ -258,4 +258,23 @@ def edit_profile(request):
 
 @login_required
 def change_password(request):
+    if request.method == "POST":
+        current_password = request.POST.get("current_password")
+        new_password = request.POST.get("new_password")
+        confirm_new_password = request.POST.get("confirm_new_password")
+
+        user = request.user
+
+        if user.check_password(current_password):
+            if new_password == confirm_new_password:
+                user.set_password(new_password)
+                user.save()
+                messages.success(request, "Password updated successfully!")
+                return redirect(reverse("change-password"))
+            else:
+                messages.error(request, "Passwords do not match!")
+                return redirect(reverse("change-password"))
+        else:
+            messages.error(request, "Please enter valid current password.")
+            return redirect(reverse("change-password"))
     return render(request, "accounts/change_password.html")
