@@ -248,5 +248,9 @@ def edit_profile(request):
         account_form = AccountForm(instance=user)
         user_profile_form = UserProfileForm(instance=user_profile)
 
-    context = {"account_form": account_form, "user_profile_form": user_profile_form}
+    context = {
+        "account_form": account_form,
+        "user_profile_form": user_profile_form,
+        "user_profile": user_profile,
+    }
     return render(request, "accounts/edit_profile.html", context)

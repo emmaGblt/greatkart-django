@@ -53,8 +53,26 @@ class AccountForm(forms.ModelForm):
         model = Account
         fields = ["first_name", "last_name", "phone_number"]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data["phone_number"]
+        pattern = r"^[0-9]{10}$"
+        if not re.match(pattern, phone_number):
+            raise forms.ValidationError("Your phone number has an invalid format!")
+        return phone_number
+
 
 class UserProfileForm(forms.ModelForm):
+    picture = forms.ImageField(
+        required=False,
+        widget=forms.FileInput,
+        error_messages={"invalid": "Image files only"},
+    )
+
     class Meta:
         model = UserProfile
         fields = [
@@ -65,3 +83,8 @@ class UserProfileForm(forms.ModelForm):
             "country",
             "picture",
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
