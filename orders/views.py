@@ -117,10 +117,7 @@ def payments(request):
             )
 
             # Send JSON response to JS method savePaymentData
-            data = {
-                "order_reference": order.reference,
-                "transaction_id": payment.transaction_id,
-            }
+            data = {"order_reference": order.reference}
             return JsonResponse(data)
         except Order.DoesNotExist, ValidationError:
             # FIXME: Cancel payment?
@@ -143,9 +140,9 @@ def payments(request):
         return render(request, "orders/payments.html", context)
 
 
+@login_required
 def order_completed(request):
     order_reference = request.GET.get("order_reference")
-    transaction_id = request.GET.get("transaction_id")
 
     try:
         order = Order.objects.get(
@@ -153,12 +150,9 @@ def order_completed(request):
         )
         order_products = OrderProduct.objects.filter(order=order)
 
-        payment = Payment.objects.get(transaction_id=transaction_id)
-
         context = {
             "order": order,
             "order_products": order_products,
-            "payment": payment,
             "subtotal": order.total - order.tax,
         }
 

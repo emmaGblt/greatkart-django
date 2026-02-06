@@ -42,11 +42,9 @@ function savePaymentData(details) {
   })
     .then((response) => response.json())
     .then((data) => {
-      const { order_reference: orderReference, transaction_id: transactionId } =
-        data;
+      const { order_reference: orderReference } = data;
       const searchParams = new URLSearchParams({
         order_reference: orderReference,
-        transaction_id: transactionId,
       });
       window.location.href = `${redirectUrl}?${searchParams.toString()}`;
     });
