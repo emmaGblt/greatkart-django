@@ -26,4 +26,16 @@ Test data can be generated using factories. Some models have a corresponding fac
 
 The test database is automatically populated with some necessary data by running the command `initialize_test_categories.py` in the Pytest configuration file (`conftest.py`).
 
+## Preview
+
+### Home page
+
 ![Home page of the website](greatkart/static/images/home_screenshot.png)
+
+### Cart
+
+![Cart](greatkart/static/images/cart_screenshot.png)
+
+### Order review
+
+![Cart](greatkart/static/images/order_review_screenshot.png)
