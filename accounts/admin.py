@@ -19,7 +19,14 @@ class AccountCreationForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ["email", "first_name", "last_name", "is_admin", "is_active"]
+        fields = [
+            "email",
+            "first_name",
+            "last_name",
+            "phone_number",
+            "is_admin",
+            "is_active",
+        ]
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -52,6 +59,7 @@ class AccountChangeForm(forms.ModelForm):
             "email",
             "first_name",
             "last_name",
+            "phone_number",
             "password",
             "is_active",
             "is_admin",
@@ -64,7 +72,14 @@ class AccountAdmin(BaseUserAdmin):
     form = AccountChangeForm
     add_form = AccountCreationForm
 
-    list_display = ["email", "first_name", "last_name", "is_admin", "is_active"]
+    list_display = [
+        "email",
+        "first_name",
+        "last_name",
+        "phone_number",
+        "is_admin",
+        "is_active",
+    ]
     list_filter = ["is_admin"]
     search_fields = ["email", "first_name", "last_name"]
     ordering = ["-date_joined"]
@@ -80,6 +95,7 @@ class AccountAdmin(BaseUserAdmin):
                 "fields": [
                     "first_name",
                     "last_name",
+                    "phone_number",
                     "is_active",
                     "date_joined",
                     "last_login",
