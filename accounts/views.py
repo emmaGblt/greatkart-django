@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 
 from carts.models import Cart
 from orders.models import Order
-from .forms import RegistrationForm
+from .forms import AccountForm, RegistrationForm, UserProfileForm
 from .models import Account, UserProfile
 from django.contrib import messages, auth
 from django.urls import reverse
@@ -103,7 +103,7 @@ def activate_account(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = Account.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
+    except TypeError, ValueError, OverflowError, Account.DoesNotExist:
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
@@ -182,7 +182,7 @@ def reset_password_validate(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = Account.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
+    except TypeError, ValueError, OverflowError, Account.DoesNotExist:
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
@@ -230,4 +230,23 @@ def my_orders(request):
 
 @login_required
 def edit_profile(request):
-    return render(request, "accounts/edit_profile.html")
+    user = request.user
+    user_profile = get_object_or_404(UserProfile, user=user)
+    if request.method == "POST":
+        account_form = AccountForm(request.POST, instance=user)
+        user_profile_form = UserProfileForm(
+            request.POST, request.FILES, instance=user_profile
+        )
+
+        if account_form.is_valid() and user_profile_form.is_valid():
+            account_form.save()
+            user_profile_form.save()
+            messages.success(request, "Your profile has been successfully updated.")
+
+            return redirect(reverse("edit-profile"))
+    else:
+        account_form = AccountForm(instance=user)
+        user_profile_form = UserProfileForm(instance=user_profile)
+
+    context = {"account_form": account_form, "user_profile_form": user_profile_form}
+    return render(request, "accounts/edit_profile.html", context)
