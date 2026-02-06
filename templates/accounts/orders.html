@@ -28,7 +28,11 @@
                   <tbody>
                     {% for order in orders %}
                     <tr>
-                      <th scope="row">{{ order.reference }}</th>
+                      <th scope="row">
+                        <a href="{% url 'order-detail' order.reference %}">
+                          {{ order.reference }}
+                        </a>
+                      </th>
                       <td>{{ order.full_name }}</td>
                       <td>{{ order.phone_number }}</td>
                       <td>${{ order.total }}</td>
