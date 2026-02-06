@@ -16,6 +16,7 @@ urlpatterns = [
         views.reset_password_validate,
         name="reset-password-validate",
     ),
+    path("orders/<uuid:order_reference>/", views.order_detail, name="order-detail"),
     path("orders/", views.orders, name="orders"),
     path("edit-profile/", views.edit_profile, name="edit-profile"),
     path("change-password/", views.change_password, name="change-password"),

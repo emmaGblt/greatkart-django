@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 
 from carts.models import Cart
-from orders.models import Order
+from orders.models import Order, OrderProduct
 from .forms import AccountForm, RegistrationForm, UserProfileForm
 from .models import Account, UserProfile
 from django.contrib import messages, auth
@@ -226,6 +226,19 @@ def orders(request):
 
     context = {"orders": orders}
     return render(request, "accounts/my_orders.html", context)
+
+
+@login_required
+def order_detail(request, order_reference=None):
+    order = get_object_or_404(Order, user=request.user, reference=order_reference)
+    order_products = OrderProduct.objects.filter(order=order)
+
+    context = {
+        "order": order,
+        "order_products": order_products,
+        "subtotal": order.total - order.tax,
+    }
+    return render(request, "accounts/order_detail.html", context)
 
 
 @login_required
