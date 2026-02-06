@@ -25,4 +25,5 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "greatkart.settings"
+DJANGO_CONFIGURATION = "Test"
 python_files = ["test_*.py"]
