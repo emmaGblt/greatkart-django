@@ -225,7 +225,7 @@ def orders(request):
     orders = Order.objects.filter(user=user, status=Order.STATUS_CHOICES["completed"])
 
     context = {"orders": orders}
-    return render(request, "accounts/my_orders.html", context)
+    return render(request, "accounts/orders.html", context)
 
 
 @login_required
