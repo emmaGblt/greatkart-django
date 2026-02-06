@@ -20,10 +20,10 @@
       Edit profile
     </a>
     <a
-      class="list-group-item {% if '/security/' in request.path %}active{%endif%}"
-      href="#"
+      class="list-group-item {% if '/change-password/' in request.path %}active{%endif%}"
+      href="{% url 'change-password' %}"
     >
-      Security
+      Change password
     </a>
   </ul>
   <br />
