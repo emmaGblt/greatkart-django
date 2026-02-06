@@ -219,7 +219,7 @@ def reset_password(request):
 
 
 @login_required
-def my_orders(request):
+def orders(request):
     user = request.user
 
     orders = Order.objects.filter(user=user, status=Order.STATUS_CHOICES["completed"])
